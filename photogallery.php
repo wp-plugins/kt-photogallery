@@ -176,7 +176,7 @@ class Photogallery {
         $album_manager = add_submenu_page('photogallery', $_new_album, $_new_album, 'upload_files', 'photogallery_album_manager', array($this, 'album_manager'));
 
         # WIP
-        $gallery_layout = add_submenu_page('photogallery', $_layout, $_layout, 'upload_files', 'photogallery_layout', array($this, 'layout'));
+        #$gallery_layout = add_submenu_page('photogallery', $_layout, $_layout, 'upload_files', 'photogallery_layout', array($this, 'layout'));
 
         add_action('load-' . $gallery_list, array($this, 'gallery_list_help'));
         add_action('load-' . $gallery_list, array($this, 'gallery_list_options'));
@@ -186,7 +186,7 @@ class Photogallery {
         add_action('load-' . $album_manager, array($this, 'album_manager_help'));
 
         # WIP
-        add_action('load-' . $gallery_layout, array($this, 'layout_help'));
+        #add_action('load-' . $gallery_layout, array($this, 'layout_help'));
     }
 
     # Unused, remove prior to stable release, update .po
