@@ -142,10 +142,11 @@ For now you have to write a custom post type template for galleries and albums. 
 
 == Screenshots ==
 
-1. Album Listing
-2. Album Editor
-3. Gallery Listing
-4. Gallery Editor
+1. Album Listing (Chromium 38 on Arch Linux 3.17)
+2. Album Editor (Chromium 38 on Arch Linux 3.17)
+3. Gallery Listing (Chromium 38 on Arch Linux 3.17)
+4. Gallery Editor (Chromium 38 on Arch Linux 3.17)
+5. Add Album Dialog for the Gallery Editor (Chromium 38 on Arch Linux 3.17)
 
 == Changelog ==
 
