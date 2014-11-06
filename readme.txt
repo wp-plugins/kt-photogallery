@@ -41,44 +41,7 @@ See also [Using Localizations](https://developer.wordpress.org/plugins/internati
 2. Open the the po file with Poedit and translate it.
 3. Save a copy as `photogallery-de_DE.po` in `/wp-content/languages/plugins`. The mo-file will be created automatically by Poedit.
 
-== Installation ==
-
-**Through WordPress' Plugin Repository**
-
-1. Goto [wordpress.org/plugins/kt-photogallery](http://wordpress.org/plugins/kt-photogallery) and download the zip
-2. Goto your WordPress. You can upload a zip-archive via `/wp-admin/plugin-install.php?tab=upload`
-3. Refere to the API section for further details on how to integrate this plugin into a theme
-
-**Manual installation**
-
-1. Upload all files found inside the zip archive to /wp-content/plugins/photogallery
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Refere to the API section for further details on how to integrate this plugin into a theme
-
-== Frequently Asked Questions ==
-
-= Where the heck are my images? =
-
-For now you have to write a custom post type template for galleries and albums. Check out the description and API section for more details.
-
-== Screenshots ==
-
-1. Album Listing
-2. Album Editor
-3. Gallery Listing
-4. Gallery Editor
-
-== Changelog ==
-
-= 0.9 =
-Initial alpha release.
-
-== Upgrade Notice ==
-
-= 0.9 =
-Initial alpha release.
-
-== API ==
+# API
 
 **PHP: `get_photogallery([int $ID])`**
 
@@ -156,3 +119,40 @@ It offers:
 - **`sortStart`** `callback(elements, cache)` Always fired after mouse moved beyond `distance` and before `helper` gets rendered.
 - **`sortUpdate`** `callback(target, elements, cache)` Fires after child elements moved to a new place. `target` refers to the element which triggered `elements` to to be moved before or after it.
 - **`sortEnd`** Always fired after user releases the mouse and `helper` disappeared.
+
+== Installation ==
+
+**Through WordPress' Plugin Repository**
+
+1. Goto [wordpress.org/plugins/kt-photogallery](http://wordpress.org/plugins/kt-photogallery) and download the zip
+2. Goto your WordPress. You can upload a zip-archive via `/wp-admin/plugin-install.php?tab=upload`
+3. Refere to the API section for further details on how to integrate this plugin into a theme
+
+**Manual installation**
+
+1. Upload all files found inside the zip archive to /wp-content/plugins/photogallery
+2. Activate the plugin through the 'Plugins' menu in WordPress
+3. Refere to the API section for further details on how to integrate this plugin into a theme
+
+== Frequently Asked Questions ==
+
+= Where the heck are my images? =
+
+For now you have to write a custom post type template for galleries and albums. Check out the description and API section for more details.
+
+== Screenshots ==
+
+1. Album Listing
+2. Album Editor
+3. Gallery Listing
+4. Gallery Editor
+
+== Changelog ==
+
+= 0.9 =
+Initial alpha release.
+
+== Upgrade Notice ==
+
+= 0.9 =
+Initial alpha release.
