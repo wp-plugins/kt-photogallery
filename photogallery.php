@@ -3,7 +3,7 @@
  * Plugin Name: Photogallery
  * Plugin URI: http://wordpress/plugins/photogallery
  * Description: Create photo-galleries with ease.
- * Version: 0.9
+ * Version: 1.0
  * Author: Daniel Schneider
  * Author URI: http://profiles.wordpress.org/kungtiger
  * License: GPL2 or later
@@ -33,8 +33,6 @@ class Photogallery {
         add_action('wp_ajax_publish_gallery', array($this, 'ajax_publish_gallery'));
         add_action('wp_ajax_publish_album', array($this, 'ajax_publish_album'));
         add_action('wp_ajax_load_albums', array($this, 'ajax_load_albums'));
-
-        # WIP
         add_action('wp_ajax_save_layout_type', array($this, 'ajax_save_layout_type'));
 
         add_filter('set-screen-option', array($this, 'set_screen_option'), 10, 3);
@@ -142,9 +140,6 @@ class Photogallery {
                 wp_localize_script('photogallery_admin_script', 'wp_L10N', $l10n);
             }
             wp_enqueue_script('photogallery_admin_script');
-
-            # Unused, remove prior to stable release
-            #echo '<script type="text/javascript">var albumManagerAjaxURL = "' . $this->url . 'ajax.php";</script>';
         }
     }
 
@@ -174,9 +169,7 @@ class Photogallery {
         $gallery_manager = add_submenu_page('photogallery', $_new_gallery, $_new_gallery, 'upload_files', 'photogallery_gallery_manager', array($this, 'gallery_manager'));
         $album_list = add_submenu_page('photogallery', ($editing ? __('Edit Album', 'photogallery') : __('Photoalbums', 'photogallery')), __('All Albums', 'photogallery'), 'upload_files', 'photogallery_album_list', array($this, 'album_list'));
         $album_manager = add_submenu_page('photogallery', $_new_album, $_new_album, 'upload_files', 'photogallery_album_manager', array($this, 'album_manager'));
-
-        # WIP
-        #$gallery_layout = add_submenu_page('photogallery', $_layout, $_layout, 'upload_files', 'photogallery_layout', array($this, 'layout'));
+        $gallery_layout = add_submenu_page('photogallery', $_layout, $_layout, 'upload_files', 'photogallery_layout', array($this, 'layout'));
 
         add_action('load-' . $gallery_list, array($this, 'gallery_list_help'));
         add_action('load-' . $gallery_list, array($this, 'gallery_list_options'));
@@ -184,20 +177,7 @@ class Photogallery {
         add_action('load-' . $album_list, array($this, 'album_list_help'));
         add_action('load-' . $album_list, array($this, 'album_list_options'));
         add_action('load-' . $album_manager, array($this, 'album_manager_help'));
-
-        # WIP
-        #add_action('load-' . $gallery_layout, array($this, 'layout_help'));
-    }
-
-    # Unused, remove prior to stable release, update .po
-
-    public function set_sidebar_help() {
-        $locale = get_locale();
-        $doc = $this->url . (file_exists('../' . PLUGINDIR . '/photogallery/photogallery-' . $locale . '.html') ? 'photogallery-' . $locale : 'photogallery') . '.html';
-        $screen = get_current_screen();
-        $screen->set_help_sidebar('
-<p><strong>' . __('For more information:', 'photogallery') . '</strong></p>
-<p><a href="' . $doc . '" target=_blank">' . __('Photogallery Documentation', 'photogallery') . '</a></p>');
+        add_action('load-' . $gallery_layout, array($this, 'layout_help'));
     }
 
     public function gallery_list_help() {
@@ -230,9 +210,6 @@ class Photogallery {
 <p>' . __("If your current theme supports menus you can add it to it. Simply click Design > Menus and then choose your gallery from the list on the left.", 'photogallery') . '</p>
 <p>' . __("Depending on your theme's design your gallery will now show up on your Wordpress side.", 'photogallery') . '</p>'
         ));
-
-        # Unused, remove prior to stable release
-        #$this->set_sidebar_help();
     }
 
     public function gallery_list_options() {
@@ -439,9 +416,6 @@ class Photogallery {
 <p>' . __('If you having trouble rearranging your album try dragging your selection over another album. Try to avoid gaps between albums because only if your mouse pointer is over another album will your selection move to a new location.', 'photogallery') . '</p>
 <p>' . __('Hold down <code>Ctrl</code> or <code>Shift</code>, or use your mouse and draw a frame to select more than one album at a time.', 'photogallery') . '</p>'
         ));
-
-        # Unused, remove prior to stable release
-        #$this->set_sidebar_help();
     }
 
     public function gallery_manager() {
@@ -572,9 +546,6 @@ class Photogallery {
     </ul>
 </p>'
         ));
-
-        # Unused, remove prior to stable release
-        #$this->set_sidebar_help();
     }
 
     public function album_list_options() {
@@ -789,9 +760,6 @@ class Photogallery {
 <p>' . __('Hold down <code>Ctrl</code> or <code>Shift</code>, or use your mouse and draw a frame to move more than one image at a time.', 'photogallery') . '</p>
 <p>' . __('If you having trouble rearranging your images try dragging your selection over another image. Try to avoid gaps between images because only if your mouse pointer is over another image will your selection move to a new location.', 'photogallery') . '</p>'
         ));
-
-        # Unused, remove prior to stable release
-        #$this->set_sidebar_help();
     }
 
     public function album_manager() {
@@ -917,8 +885,6 @@ class Photogallery {
         <?php
     }
 
-    # WIP
-
     public function layout_help() {
         $screen = get_current_screen();
         $screen->add_help_tab(array(
@@ -935,8 +901,6 @@ class Photogallery {
 <p>' . __('If you want to use your own custom layout just tick the checkbox below the header and follow the on screen instructions.', 'photogallery') . '</p>'
         ));
     }
-
-    # WIP
 
     public function layout() {
         $type = get_option('photogallery_layout_type', 'standart');
