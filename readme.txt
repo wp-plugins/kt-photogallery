@@ -39,13 +39,13 @@ See also [Using Localizations](https://developer.wordpress.org/plugins/internati
 
 1. Get [Poedit](http://poedit.net).
 2. Open the the po file with Poedit and translate it.
-3. Save a copy as `photogallery-de_DE.po` in /wp-content/languages/plugins. The mo-file will be created automatically by Poedit.
+3. Save a copy as `photogallery-de_DE.po` in `/wp-content/languages/plugins`. The mo-file will be created automatically by Poedit.
 
 == Installation ==
 
 **Through WordPress' Plugin Repository**
 
-1. Goto [wordpress.org/plugins/photogallery](http://wordpress.org/plugins/photogallery) and download the zip
+1. Goto [wordpress.org/plugins/kt-photogallery](http://wordpress.org/plugins/kt-photogallery) and download the zip
 2. Goto your WordPress. You can upload a zip-archive via `/wp-admin/plugin-install.php?tab=upload`
 3. Refere to the API section for further details on how to integrate this plugin into a theme
 
@@ -82,14 +82,14 @@ Initial alpha release.
 
 **PHP: `get_photogallery([int $ID])`**
 
-Fetches a Photogallery with all Albums IDs attached to it.
+Fetches a photogallery with all albums IDs attached to it.
 Takes an optional ID of a gallery to be loaded. Defaults to `$wp_query->post->ID` which is the current post/gallery ID if used inside the Loop of WordPress.
 Returns an object on success, otherwise false. Use e.g `print_var()` for further details.
 
 **PHP: `get_photoalbum([int $ID])`**
 
-Fetches a Photoalbum with all Data, its Thumbnail and attached Images.
-Takes an optional ID of an album to be loaded. Defaults to `$wp_query->post->ID` which is the current post/album ID if used the Loop of WordPress.
+Fetches a photoalbum with all data, its thumbnail and attached images.
+Takes an optional ID of an album to be loaded. Defaults to `$wp_query->post->ID` which is the current post/album ID if used inside the Loop of WordPress.
 Returns an object on success, otherwise false. Use e.g `print_var()` for further details.
 
 **jQuery `SelectSort` Plugin**
@@ -147,10 +147,10 @@ It offers:
 **`elements`** refers to either all selected or currently sorted child elements.   
 **`cache`** refers to an internal cache which stores jQuery representations, position, dimension and other status of all child elements possibly involved in a selection or sorting process. You can access it for speed-up or whatever reason during most events.
 
-- **`select`** `callback(elements, cache)` Fired after any child element got selected.
+- **`select`** `callback(elements, cache)` Fired after one or more child elements got selected.
 - **`deselect`** Fired after all child elements are unselected.
 - **`sort`** `callback(elements, cache)` Fired after any element got sorted.
-- **`selectStart`** `callback(cache)` Always fired after mouse moved beyond `distance` and before a selection marquee gets rendered.
+- **`selectStart`** `callback(cache)` Always fired after mouse moved beyond `distance` and before a selection marquee is rendered.
 - **`selectUpdate`** `callback(elements, cache)` Fired after any child element got selected and during marquee selection.
 - **`selectEnd`** Always fired after user releases the mouse and the marquee disappeared.
 - **`sortStart`** `callback(elements, cache)` Always fired after mouse moved beyond `distance` and before `helper` gets rendered.
