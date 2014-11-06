@@ -20,7 +20,8 @@ class Photogallery {
     public function __construct() {
         global $wpdb;
         $this->wp_posts = $wpdb->prefix . 'posts';
-        $this->url = plugins_url() . '/photogallery/';
+        #$this->url = plugin_dir_path(__FILE__);
+        $this->url = plugins_url() . '/kt-photogallery/';
 
         add_action('init', array($this, 'register_post_type'));
         add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));

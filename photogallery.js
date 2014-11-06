@@ -401,7 +401,7 @@
                         type: type
                     },
                     success: function (ok) {
-                        
+
                     },
                     complete: function(){
                         $Tabs.removeClass(cssAjax);

@@ -34,12 +34,12 @@ This zip comes with example templates. You can use them as a starting point. Jus
 
 **Language**
 
-This plugin is in English by default but comes with a German po-file.
+This plugin is in English (en_US) by default but comes with a German (de_DE) po-file.
 See also [Using Localizations](https://developer.wordpress.org/plugins/internationalization/localization/#using-localizations).
 
 1. Get [Poedit](http://poedit.net).
 2. Open the the po file with Poedit and translate it.
-3. Save a copy as `photogallery-de_DE.po` in `/wp-content/languages/plugins`. The mo-file will be created automatically by Poedit.
+3. Save a copy as e.g `photogallery-fr_FR.po` in `/wp-content/languages/plugins`. The mo-file will be created automatically by Poedit.
 
 **API**
 
