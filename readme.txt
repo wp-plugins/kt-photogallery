@@ -102,32 +102,32 @@ It offers:
 - keyboard integration
 - drag and drop helper for additional UI/UX
 
-    SelectSort(selector, {
-        sortable: true,
-        distance: 7,
-        helper: false,
-        offsetX: 12,
-        offsetY: 12,
-        filter: 'li',
-        selected: 'ui-selected',
-        selecting: 'ui-selecting',
-        sorting: 'ui-sorting',
-        marquee: 'ui-marquee',
-        select: callback,
-        deselect: callback,
-        sort: callback,
-        selectStart: callback,
-        selectUpdate: callback,
-        selectEnd: callback,
-        sortStart: callback,
-        sortUpdate: callback,
-        sortEnd: callback
-    });
+`SelectSort(selector, {
+    sortable: true,
+    distance: 7,
+    helper: false,
+    offsetX: 12,
+    offsetY: 12,
+    filter: 'li',
+    selected: 'ui-selected',
+    selecting: 'ui-selecting',
+    sorting: 'ui-sorting',
+    marquee: 'ui-marquee',
+    select: callback,
+    deselect: callback,
+    sort: callback,
+    selectStart: callback,
+    selectUpdate: callback,
+    selectEnd: callback,
+    sortStart: callback,
+    sortUpdate: callback,
+    sortEnd: callback
+});`
 
 **Initialization Parameters**
 
-- `selector` a jQuery selector, DOM object or jQuery; basically anything, you would pass to `jQuery()` or `$()`.
-- `options` an optional object for initialization.
+- `selector` is a jQuery selector, DOM object or jQuery; basically anything, you would pass to `jQuery()` or `$()`.
+- `options` is an optional object for initialization.
 
 **Initialization Options**
 
