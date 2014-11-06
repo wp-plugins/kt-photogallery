@@ -41,7 +41,7 @@ See also [Using Localizations](https://developer.wordpress.org/plugins/internati
 2. Open the the po file with Poedit and translate it.
 3. Save a copy as `photogallery-de_DE.po` in `/wp-content/languages/plugins`. The mo-file will be created automatically by Poedit.
 
-# API
+**API**
 
 **PHP: `get_photogallery([int $ID])`**
 
