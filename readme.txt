@@ -1,6 +1,5 @@
 === Photogallery ===
 Contributors: kungtiger
-Donate Link: none
 Tags: photo, image, gallery
 Requires at least: 4.0
 Tested up to: 4.0
