@@ -3,8 +3,8 @@ Contributors: kungtiger
 Donate Link: none
 Tags: photo, image, gallery
 Requires at least: 4.0
-Tested up to: 4.0
-Stable tag: 1.0
+Tested up to: 4.1
+Stable tag: 0.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ Create photo-galleries with ease.
 
 == Description ==
 
-**For now this plugin is meant primarily for theme developers until its first stable release.**
+**This plugin is meant primarily for theme developers.**
 
 It allows to collect photos from the the Media Manager and arrange them into albums.   
 These albums can be combined into galleries.   
@@ -23,13 +23,7 @@ Both albums and galleries can be added to a theme's navigation menu.
 You have to write a post type template file for your theme in order for an album or gallery to actually work.
 This gives Theme developers the most control over a frontend presentation and users a convenient way to create galleries through the WordPress dashboard.
 If you install this plugin, create albums and galleries and include them into your theme's menu, you will be disappointed, since nothing will happen.
-I will include basic theme support in the first stable release, so users can choose from a simple variety of gallery templates and behaviors.
-
-But for now you need to write two theme templates for custom post types:
-
-- `single-photogallery.php` is for generating an album list or grid
-- `single-photogallery_album.php` is for displaying images found inside an album
-
+There are a number of default templates a user can choose from but you have always the option to write your own template.
 This zip comes with example templates. You can use them as a starting point. Just copy them into your current theme's folder.
 
 **Language**
@@ -42,18 +36,6 @@ See also [Using Localizations](https://developer.wordpress.org/plugins/internati
 3. Save a copy as e.g `photogallery-fr_FR.po` in `/wp-content/languages/plugins`. The mo-file will be created automatically by Poedit.
 
 **API**
-
-**PHP: `get_photogallery([int $ID])`**
-
-Fetches a photogallery with all albums IDs attached to it.
-Takes an optional ID of a gallery to be loaded. Defaults to `$wp_query->post->ID` which is the current post/gallery ID if used inside the Loop of WordPress.
-Returns an object on success, otherwise false. Use e.g `print_var()` for further details.
-
-**PHP: `get_photoalbum([int $ID])`**
-
-Fetches a photoalbum with all data, its thumbnail and attached images.
-Takes an optional ID of an album to be loaded. Defaults to `$wp_query->post->ID` which is the current post/album ID if used inside the Loop of WordPress.
-Returns an object on success, otherwise false. Use e.g `print_var()` for further details.
 
 **jQuery `SelectSort` Plugin**
 
@@ -138,7 +120,7 @@ It offers:
 
 = Where the heck are my images? =
 
-For now you have to write a custom post type template for galleries and albums. Check out the description and API section for more details.
+For now you have to write a custom post type template for galleries and albums.
 
 == Screenshots ==
 
@@ -148,14 +130,21 @@ For now you have to write a custom post type template for galleries and albums. 
 4. Gallery Editor (Chromium 38 on Arch Linux 3.17)
 5. Add Album Dialog for the Gallery Editor (Chromium 38 on Arch Linux 3.17)
 6. Standart Layouts to choose from (Chromium 38 on Arch Linux 3.17)
-7. Custom Layout Editor (Chromium 38 on Arch Linux 3.17)
 
 == Changelog ==
 
 = 0.9 =
 Initial alpha release.
 
+= 1.0 =
+- Added default templates for galleries and albums
+- Added options page to choose default templates
+- Added documentation to options page
+
 == Upgrade Notice ==
 
 = 0.9 =
 Initial alpha release.
+
+= 1.0 =
+Note that all previous functions for custom templates are now deprecated in favour of OOP versions
