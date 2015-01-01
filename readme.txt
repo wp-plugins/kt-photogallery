@@ -4,7 +4,7 @@ Donate Link: none
 Tags: photo, image, gallery
 Requires at least: 4.0
 Tested up to: 4.0
-Stable tag: 0.9
+Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -142,10 +142,13 @@ For now you have to write a custom post type template for galleries and albums. 
 
 == Screenshots ==
 
-1. Album Listing
-2. Album Editor
-3. Gallery Listing
-4. Gallery Editor
+1. Album Listing (Chromium 38 on Arch Linux 3.17)
+2. Album Editor (Chromium 38 on Arch Linux 3.17)
+3. Gallery Listing (Chromium 38 on Arch Linux 3.17)
+4. Gallery Editor (Chromium 38 on Arch Linux 3.17)
+5. Add Album Dialog for the Gallery Editor (Chromium 38 on Arch Linux 3.17)
+6. Standart Layouts to choose from (Chromium 38 on Arch Linux 3.17)
+7. Custom Layout Editor (Chromium 38 on Arch Linux 3.17)
 
 == Changelog ==
 
