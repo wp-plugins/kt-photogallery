@@ -43,7 +43,7 @@ class kt_Photogallery {
         add_filter('manage_photogallery_posts_columns', array($this, '_add_custom_gallery_columns'));
         add_action('manage_photogallery_posts_custom_column', array($this, '_render_custom_gallery_columns'), 1, 2);
 
-        $this->_register_default_designs();
+        $this->register_default_designs();
     }
 
     public function _init() {
@@ -606,14 +606,14 @@ class kt_Photogallery {
     }
 
     public function _add_gallery_metaboxes() {
-        add_meta_box('griddiv', __('Albums', 'kt-photogallery'), array($this, 'render_grid'), 'photogallery', 'exposed');
-        add_meta_box('gallery_design', __('Gallery Design', 'kt-photogallery'), array($this, 'render_gallery_design_metabox'), 'photogallery', 'side');
+        add_meta_box('griddiv', __('Albums', 'kt-photogallery'), array($this, '_render_grid'), 'photogallery', 'exposed');
+        add_meta_box('gallery_design', __('Gallery Design', 'kt-photogallery'), array($this, '_render_gallery_design_metabox'), 'photogallery', 'side');
     }
 
     public function _add_album_metaboxes() {
-        add_meta_box('griddiv', __('Images', 'kt-photogallery'), array($this, 'render_grid'), 'photoalbum', 'exposed');
-        add_meta_box('album_thumbnail', __('Thumbnail', 'kt-photogallery'), array($this, 'render_album_thumbnail_metabox'), 'photoalbum', 'side');
-        add_meta_box('album_design', __('Album Design', 'kt-photogallery'), array($this, 'render_album_design_metabox'), 'photoalbum', 'side');
+        add_meta_box('griddiv', __('Images', 'kt-photogallery'), array($this, '_render_grid'), 'photoalbum', 'exposed');
+        add_meta_box('album_thumbnail', __('Thumbnail', 'kt-photogallery'), array($this, '_render_album_thumbnail_metabox'), 'photoalbum', 'side');
+        add_meta_box('album_design', __('Album Design', 'kt-photogallery'), array($this, '_render_album_design_metabox'), 'photoalbum', 'side');
     }
 
     protected function render_design_metabox($post_type, $post, $default_design) {
