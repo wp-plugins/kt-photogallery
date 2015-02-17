@@ -94,4 +94,4 @@
             }
         });
     });
-})(jQuery, wp_L10N);
+})(jQuery, kt_Photogallery_l10n);

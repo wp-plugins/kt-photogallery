@@ -92,4 +92,4 @@
             }
         });
     });
-})(jQuery, wp_L10N, ajaxurl);
+})(jQuery, kt_Photogallery_l10n, ajaxurl);

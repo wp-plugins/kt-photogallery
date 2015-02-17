@@ -195,23 +195,13 @@ class kt_Photogallery {
             }
             echo '</span>';
         } else if ($column_name == 'image_count') {
-            $image_meta = get_post_meta($album_ID, '_photoalbum_images', true);
-            if ($image_meta) {
-                echo count(explode(',', $image_meta));
-            } else {
-                echo '0';
-            }
+            echo $this->get_image_count($album_ID);
         }
     }
 
     public function _render_custom_gallery_columns($column_name, $gallery_ID) {
         if ($column_name == 'album_count') {
-            $album_meta = get_post_meta($gallery_ID, '_photogallery_albums', true);
-            if ($album_meta) {
-                echo count(explode(',', $album_meta));
-            } else {
-                echo '0';
-            }
+            echo $this->get_album_count($gallery_ID);
         }
     }
 
@@ -234,7 +224,7 @@ class kt_Photogallery {
                 wp_enqueue_script('jquery-ui-dialog');
                 wp_enqueue_style('wp-jquery-ui-dialog');
                 wp_enqueue_script('kt-photogallery', $this->url . '/js/gallery.js', array('jquery'), '1.0');
-                wp_localize_script('kt-photogallery', 'wp_L10N', array(
+                wp_localize_script('kt-photogallery', 'kt_Photogallery_l10n', array(
                     'add' => __('Add to Gallery', 'kt-photogallery'),
                     'close' => __('Close', 'kt-photogallery'),
                     'title' => __('Choose Albums', 'kt-photogallery')
@@ -243,7 +233,7 @@ class kt_Photogallery {
             if ($post_type == 'photoalbum') {
                 wp_enqueue_media();
                 wp_enqueue_script('kt-photoalbum', $this->url . '/js/album.js', array('jquery'), '1.0');
-                wp_localize_script('kt-photoalbum', 'wp_L10N', array(
+                wp_localize_script('kt-photoalbum', 'kt_Photogallery_l10n', array(
                     'title' => __('Choose Images', 'kt-photogallery'),
                     'add' => __('Add to Album', 'kt-photogallery'),
                     'thumbnail' => __('Choose Thumbnail', 'kt-photogallery'),
@@ -359,7 +349,6 @@ class kt_Photogallery {
 
     public function _add_help_tabs() {
         $screen = get_current_screen();
-        #$this->xmp($screen);
         if ($screen->post_type == 'photogallery') {
             if ($screen->base == 'edit') {
                 $screen->add_help_tab(array(
@@ -387,6 +376,12 @@ class kt_Photogallery {
 <p>' . __('If you cannot choose a gallery them make sure your checked Galleries in the Screen Options tab.', 'kt-photogallery') . '</p>
 <p>' . __("Depending on your theme's design your gallery will now show up on your Wordpress side.", 'kt-photogallery') . '</p>'
                 ));
+
+                $screen->set_help_sidebar('<p><strong>'.__('For more information:', 'kt-photogallery').'</strong></p>
+<p><a href="http://codex.wordpress.org/Posts_Screen" target="_blank">'.__('Documentation on Managing Posts','kt-phototgallery').'</a></p>
+<p><a href="https://wordpress.org/support/" target="_blank">'.__('WordPress Support Forums', 'kt-photogallery').'</a></p>
+<p><a href="https://wordpress.org/support/plugin/kt-photogallery/" target="_blank">'.__('Photogallery Support Forum', 'kt-photogallery').'</a></p>
+<p><a href="'.$this->url.'/api/documentation.php" target="_blank">'.__('API Documentation', 'kt-photogallery').'</a></p>');
             } else {
                 $screen->add_help_tab(array(
                     'id' => 'help_general',
@@ -415,6 +410,12 @@ class kt_Photogallery {
 <p>' . __('If you having trouble rearranging your album try dragging your selection over another album. Try to avoid gaps between albums because only if your mouse pointer is over another album will your selection move to a new location.', 'kt-photogallery') . '</p>
 <p>' . __('Hold down <code>Ctrl</code> or <code>Shift</code>, or use your mouse and draw a frame to select more than one album at a time.', 'kt-photogallery') . '</p>'
                 ));
+
+                $screen->set_help_sidebar('<p><strong>'.__('For more information:', 'kt-photogallery').'</strong></p>
+<p><a href="http://codex.wordpress.org/Posts_Add_New_Screen" target="_blank">'.__('Documentation on Writing and Editing Posts','kt-phototgallery').'</a></p>
+<p><a href="https://wordpress.org/support/" target="_blank">'.__('WordPress Support Forums', 'kt-photogallery').'</a></p>
+<p><a href="https://wordpress.org/support/plugin/kt-photogallery/" target="_blank">'.__('Photogallery Support Forum', 'kt-photogallery').'</a></p>
+<p><a href="'.$this->url.'/api/documentation.php" target="_blank">'.__('API Documentation', 'kt-photogallery').'</a></p>');
             }
         } else if ($screen->post_type == 'photoalbum') {
             if ($screen->base == 'edit') {
@@ -435,6 +436,12 @@ class kt_Photogallery {
     </ul>
 </p>'
                 ));
+
+                $screen->set_help_sidebar('<p><strong>'.__('For more information:', 'kt-photogallery').'</strong></p>
+<p><a href="http://codex.wordpress.org/Posts_Screen" target="_blank">'.__('Documentation on Managing Posts','kt-phototgallery').'</a></p>
+<p><a href="https://wordpress.org/support/" target="_blank">'.__('WordPress Support Forums', 'kt-photogallery').'</a></p>
+<p><a href="https://wordpress.org/support/plugin/kt-photogallery/" target="_blank">'.__('Photogallery Support Forum', 'kt-photogallery').'</a></p>
+<p><a href="'.$this->url.'/api/documentation.php" target="_blank">'.__('API Documentation', 'kt-photogallery').'</a></p>');
             } else {
                 $screen->add_help_tab(array(
                     'id' => 'help_general',
@@ -470,8 +477,20 @@ class kt_Photogallery {
 <p>' . __('Hold down <code>Ctrl</code> or <code>Shift</code>, or use your mouse and draw a frame to move more than one image at a time.', 'kt-photogallery') . '</p>
 <p>' . __('If you having trouble rearranging your images try dragging your selection over another image. Try to avoid gaps between images because only if your mouse pointer is over another image will your selection move to a new location.', 'kt-photogallery') . '</p>'
                 ));
+
+                $screen->set_help_sidebar('<p><strong>'.__('For more information:', 'kt-photogallery').'</strong></p>
+<p><a href="http://codex.wordpress.org/Posts_Add_New_Screen" target="_blank">'.__('Documentation on Writing and Editing Posts','kt-phototgallery').'</a></p>
+<p><a href="'.$this->url.'/api/documentation.html" target="_blank">'.__('API Documentation', 'kt-photogallery').'</a></p>');
             }
         }
+    }
+
+    protected function help_sidebar($screen){
+        $screen->set_help_sidebar('<p><strong>'.__('For more information:', 'kt-photogallery').'</strong></p>
+<p><a href="http://codex.wordpress.org/Posts_Screen" target="_blank">'.__('Documentation on Managing Posts','kt-phototgallery').'</a></p>
+<p><a href="https://wordpress.org/support/" target="_blank">'.__('WordPress Support Forums', 'kt-photogallery').'</a></p>
+<p><a href="https://wordpress.org/support/plugin/kt-photogallery/" target="_blank">'.__('Photogallery Support Forum', 'kt-photogallery').'</a></p>
+<p><a href="'.$this->url.'/api/documentation.php" target="_blank">'.__('API Documentation', 'kt-photogallery').'</a></p>');
     }
 
     public function _ajax_load_albums() {
