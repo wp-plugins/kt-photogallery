@@ -2,7 +2,6 @@ $border_color: #E5E5E5;
 $background_color: #F5F5F5;
 $remove_color: #900;
 $the_blue: #0074A2;
-$the_green: #73D216;
 
 @mixin noselect {
     -webkit-user-select: none;
@@ -28,7 +27,7 @@ $the_green: #73D216;
     border: 3px dashed $border_color !important;
     box-shadow: none !important;
 }
-.kt-grid .ui-sorting img {
+.kt-grid .ui-sorting * {
     visibility: hidden;
 }
 .ui-marquee {
@@ -44,6 +43,7 @@ body.ui-selecting .kt-grid * {
 .ui-sort-helper {
     position: absolute;
     margin: 10px 0 0 12px;
+    z-index: 99999;
 }
 .ui-sort-helper img {
     position: absolute;

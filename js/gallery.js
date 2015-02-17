@@ -82,6 +82,10 @@
             change: function (_, selected) {
                 $Wrap.toggleClass('removeable', selected);
                 $document[selected ? 'on' : 'off']('keydown', maybeDelete);
+            },
+            helper: function($set) {
+                var $stack = $set.slice(0, 3).find('img').clone();
+                return $('<div class="ui-sort-helper" />').append($stack);
             }
         });
         SelectSort($Dialog, {
