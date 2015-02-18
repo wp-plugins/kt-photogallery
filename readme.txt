@@ -49,15 +49,10 @@ If you want your translation included in the next version of Photogallery, don't
 **PHP API**
 
 I have included a number of functions for fetching album, image and thumbnail IDs associated with a gallery or album.
-Please not that all methods starting with an underscore are considered internal and are not documented here. Although some are publicly accessible you should not use them directly unless you know what you are doing.
+Please note that all methods starting with an underscore are considered internal and are not documented here. Although some are publicly accessible you should not use them directly unless you know what you are doing.
 
 You do not have to create a new kt_Photogallery instance, there is already one in the global namespace.  
-Access all public methods via `$kt_Photogallery`. Don't forget to pull it into the current scope if you want to use it inside a function:
-
-`function my_function() {
-  global $kt_Photogallery;
-  # ...
-}`
+Access all public methods via `$kt_Photogallery`.
 
 - **`$kt_Photogallery->get_album_count ( [$gallery_ID] )`**  
 Returns the number of albums associated with a gallery  
@@ -103,12 +98,74 @@ The design will be available in the Album Design metabox during editing
   - `string icon` - The image shown next to the label. Can be `dashicons-*`, an URL to an image or a base 64 encoded image
   - `string title` - Text used inside the HTML title tag, usually containing a description
   - `callback render ($post, $options)` - Callback rendering the design on the frontend. The arguments passed are the current post as a WP_Post instance and an associative array of the options straight from the database
-  - `callback options ($current_options, $defaults, $post)` - Callback for additional form fields, should echo HTML. The arguments passed are the current post as a WP_Post instance and an associative array of the options straight from the database
-  - `array defaults` - Associative array containing the default values for options. Note that its keys are used during saving so you should generate HTML form fields `options` and maybe a callback for filtering.
-  - `callback filter ($current_options, $defaults, $post)` - Callback for filtering the options before they are saved. This callback is called every time a post is saved. The arguments passed are the default options merged with the values from the current request, the default options as second argument and the current post as a WP_Post instance as third. The callback must return an associative array otherwise no options are stored for this design.
+  - `callback options ($current_options, $defaults, $post)` - Callback for additional form fields, should echo HTML. The arguments passed are an associative array of the options straight from the database, the default options as second argument and the current post as a WP_Post instance.
+  - `array defaults` - Associative array containing default values for options. Its keys are used during saving so you should generate HTML form fields via `options` and maybe use a callback for filtering.
+  - `callback filter ($current_options, $defaults, $post)` - Callback for filtering the options before they are saved. This callback is called every time a post is saved. The arguments passed are the default options merged with the values from the current request, the default options as second argument and the current post as a WP_Post instance as third. The callback must return an associative array otherwise no options are stored.
 
 - **`$kt_Photogallery->render`**  
 Main output method. Depending on the current post type the method prints out a design for a gallery or album.
+
+**Example**
+
+A basic example
+
+`# functions.php
+
+$kt_Photogallery->register_gallery_design ('my_gallery_design', array(
+  'label' => __('My Gallery Design', 'my-textdomain'),
+  'icon' => 'dashicons-format-gallery',
+  'title' => __('This is my custom gallery design', 'my-textdomain'),
+  'render' => 'render_my_gallery_design'
+));
+
+function render_my_gallery_design ($post) {
+  global $kt_Photogallery;
+  $album_IDs = $kt_Photogallery->get_albums($post);
+  if ($album_IDs) {
+    foreach ($album_IDs as $album_ID) {
+      $album_thumbnail = $kt_Photogallery->get_thumbnail_src($album_ID);
+      echo '<a href="' . get_permalink($album_ID) . '">';
+      if ($album_thumbnail) {
+        echo '<img src="' . $album_thumbnail[0] . '" alt />';
+      }
+      echo '</a>';
+    }
+  } else {
+    printf(__('The gallery %s does not contain any albums', 'my-textdomain'), $post->post_title);
+  }
+}`
+
+Basic integration into [Twenty Fifteen](https://wordpress.org/themes/twentyfifteen):
+
+`<?php
+  # single-photogallery.php
+  get_header();
+?>
+<div id="primary" class="content-area">
+  <main id="main" class="site-main" role="main">
+<?php
+  while (have_posts()) {
+    the_post();
+?>
+    <article class="hentry">
+      <header class="entry-header">
+<?php
+    the_title('<h1 class="entry-title">', '</h1>');
+?>
+      </header>
+      <div class="entry-content">
+<?php
+    $kt_Photogallery->render();
+?>
+      </div>
+    </article>
+<?php
+  }
+?>
+  </main>
+</div>
+<?php
+  get_footer();`
 
 **jQuery `SelectSort` Plugin** version 1.1
 
