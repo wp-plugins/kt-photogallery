@@ -48,7 +48,7 @@ I have included a number of functions for fetching album, image and thumbnail ID
 Please not that all methods starting with an underscore are considered internal and are briefly documented here for the sake of completeness. Although they are publicly accessible you should not use them directly unless you know what you are doing.
 
 You do not have to create a new kt_Photogallery instance, there is already one in the global namespace.  
-Access all public methods via `$kt_Photogallery`. Don't forgett to pull it into the current scope if you want to use it inside a function:
+Access all public methods via `$kt_Photogallery`. Don't forget to pull it into the current scope if you want to use it inside a function:
 
 `function my_function() {
   global $kt_Photogallery;
@@ -58,7 +58,7 @@ Access all public methods via `$kt_Photogallery`. Don't forgett to pull it into 
 - **`$kt_Photogallery->get_album_count ( [$gallery_ID] )`**  
 Returns the number of albums associated with a gallery  
 **Argument** `$gallery_ID` *Optional* - ID of a gallery. Defaults to the current ID if used inside the Loop  
-**Returns** `integer`|`boolean` - Returns integer on success, or `false` if `$gallery_ID`yields no gallery
+**Returns** `integer`|`boolean` - Returns integer on success, or `false` if `$gallery_ID` yields no gallery
 
 - **`$kt_Photogallery->get_albums ( [$gallery_ID] )`**  
 Returns an array of album IDs associated with an gallery.  
@@ -88,7 +88,7 @@ Returns an ordered array with values corresponding to the (0) url, (1) width, (2
 **Returns** `array|false` - Returns an array on success, `false` if `$album_ID` yields no album, no thumbnail is set or fallback could be resolved
 
 - **`$kt_Photogallery->register_album_design ( $key, $options )`**
-- **`$kt_Photogallery->register_gallery_design ( $key, $options )`**
+- **`$kt_Photogallery->register_gallery_design ( $key, $options )`**  
 Registers a custom design for albums and galleries respectively.  
 The design will be available in the Album Design metabox during editing  
 **Returns** `boolean` - returns `true` if the design was registered successfully, `false` on failure.  
