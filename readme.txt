@@ -2,7 +2,7 @@
 Contributors: kungtiger
 Requires at least: 4.0
 Tested up to: 4.1
-Stable tag: 0.9
+Stable tag: 1.0
 Tags: photo, image, gallery, album
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -18,6 +18,8 @@ These albums can be combined into galleries.
 Both albums and galleries can be added to a theme's navigation menu.
 
 Note that this plugin does not provide any CSS formatting and JavaScript for frontend presentation of galleries and albums. You have to format them yourself and integrate necessary JavaScript libraries, e.g Lightbox, yourself. This plugin merely gives a framework for gallery and album creation via custom post types and registration of designs for a frontend presentation.
+
+If you found a bug or have any questions, complains or suggestions please feel free to contact me.
 
 **Theme Integration**
 
@@ -224,7 +226,7 @@ It offers:
 
 = Where the heck are my images? =
 
-For now you have to write a custom post type template for galleries and albums.
+You have to write template files for custom post types and add them to your theme. Refere to the Description were you find instructions.
 
 == Screenshots ==
 
