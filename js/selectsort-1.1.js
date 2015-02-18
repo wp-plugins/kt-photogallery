@@ -39,9 +39,9 @@ window.SelectSort = (function ($) {
                 if (can_deselect) {
                     if (some) {
                         can_deselect = false;
-                        $document.on('mousedown', deselect);
+                        $target.on('mousedown', deselect);
                     } else {
-                        $document.off('mousedown', deselect);
+                        $target.off('mousedown', deselect);
                     }
                 }
                 if (some) {
@@ -55,7 +55,7 @@ window.SelectSort = (function ($) {
                 if ((e.target == scope || $(e.target).closest(scope).length == 0) && !(e.metaKey || e.ctrlKey || e.shiftKey)) {
                     children().removeClass(o.selected);
                     can_deselect = true;
-                    $document.off('mousedown', deselect);
+                    $target.off('mousedown', deselect);
                     $target.trigger('deselect');
                     $target.trigger('change', [ false ]);
                     indexA = null;
@@ -159,7 +159,7 @@ window.SelectSort = (function ($) {
                     });
                     if (can_deselect) {
                         can_deselect = false;
-                        $document.on('mousedown', deselect);
+                        $target.on('mousedown', deselect);
                     }
                     $target.trigger('selectStart', [ Cache ]);
                 }

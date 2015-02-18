@@ -66,7 +66,8 @@
         $Add.on('click', function (e) {
             $Dialog.dialog('open');
         });
-        $Remove.on('click', function () {
+        $Remove.on('click', function (e) {
+            console.log(e);
             $Grid.children('.' + cssSelected).remove();
             $Wrap.removeClass('removeable');
         });
