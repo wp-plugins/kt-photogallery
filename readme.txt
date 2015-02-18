@@ -138,34 +138,34 @@ function render_my_gallery_design ($post) {
 Basic integration into [Twenty Fifteen](https://wordpress.org/themes/twentyfifteen):
 
 `<?php
-  # single-photogallery.php
-  get_header();
+# single-photogallery.php
+get_header();
 ?>
 <div id="primary" class="content-area">
   <main id="main" class="site-main" role="main">
-<?php
+  <?php
   while (have_posts()) {
     the_post();
-?>
+    ?>
     <article class="hentry">
       <header class="entry-header">
-<?php
-    the_title('<h1 class="entry-title">', '</h1>');
-?>
+      <?php
+        the_title('<h1 class="entry-title">', '</h1>');
+      ?>
       </header>
       <div class="entry-content">
-<?php
-    $kt_Photogallery->render();
-?>
+      <?php
+        $kt_Photogallery->render();
+      ?>
       </div>
     </article>
-<?php
+    <?php
   }
-?>
+  ?>
   </main>
 </div>
 <?php
-  get_footer();`
+get_footer();`
 
 **jQuery `SelectSort` Plugin** version 1.1
 
