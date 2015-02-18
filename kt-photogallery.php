@@ -543,9 +543,7 @@ class kt_Photogallery {
             }
             $thumb_html = '';
             if ($thumb) {
-                $thumb_html = '
-            <img src="' . $thumb[0] . '" width="' . $thumb[1] . '" height="' . $thumb[2] . '" alt />
-            ';
+                $thumb_html = '<img src="' . $thumb[0] . '" width="' . $thumb[1] . '" height="' . $thumb[2] . '" alt />';
             }
 
             $image_IDs = get_post_meta($album_ID, '_photoalbum_images', true);
@@ -563,17 +561,16 @@ class kt_Photogallery {
                 $title_str = '<em>' . __('Unnamed Album', 'kt-photogallery') . '</em>';
             }
             $author_str = sprintf(__('By %s', 'kt-photogallery'), get_the_author_meta('display_name', $album->post_author));
-            $html = '
-        <figure class="album">
-            <input type="hidden" name="albums[]" value="' . $album_ID . '" />
-            <span class="kt-thumbnail">' . $thumb_html . '</span>
-            <aside>
-                <span class="album_title">' . esc_html($title_str) . '</span>
-                <span class="album_author">' . esc_html($author_str) . '</span>
-                <span class="image_count">' . esc_html($count_str) . '</span>
-                <span class="album_status">' . esc_html($status_str) . '</span>
-            </aside>
-        </figure>';
+            $html = '<figure class="album">
+<input type="hidden" name="albums[]" value="' . $album_ID . '" />
+    <span class="kt-thumbnail">' . $thumb_html . '</span>
+    <aside>
+        <span class="album_title">' . esc_html($title_str) . '</span>
+        <span class="album_author">' . esc_html($author_str) . '</span>
+        <span class="image_count">' . esc_html($count_str) . '</span>
+        <span class="album_status">' . esc_html($status_str) . '</span>
+    </aside>
+</figure>';
         }
         return $html;
     }
@@ -640,8 +637,11 @@ class kt_Photogallery {
 
     protected function render_design_metabox($post_type, $post, $default_design) {
         $design_meta = get_post_meta($post->ID, '_' . $post_type . '_design', true);
+        if($design_meta == ''){
+            $design_meta = array();
+        }
         $current = $design_meta ? $design_meta['id'] : $default_design;
-        if (!key_exists('options', $design_meta['options'])) {
+        if (!key_exists('options', $design_meta)) {
             $design_meta['options'] = array();
         }
         wp_nonce_field('choose_design', '_design_nonce', false);
