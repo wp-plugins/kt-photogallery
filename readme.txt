@@ -232,7 +232,7 @@ For now you have to write a custom post type template for galleries and albums.
 2. Album Editor
 3. Gallery Listing
 4. Gallery Editor
-5. Add Album Dialog for the Gallery Editor
+5. Add Album Dialog
 
 == Changelog ==
 
