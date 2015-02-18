@@ -246,7 +246,7 @@ class kt_Photogallery {
         }
     }
 
-        protected function _register_post_types() {
+        public function _register_post_types() {
         register_post_type('photogallery', array(
             'label' => __('Photogalleries', 'kt-photogallery'),
             'description' => __('A custom post type for photo galleries', 'kt-photogallery'),
@@ -641,7 +641,7 @@ class kt_Photogallery {
     protected function render_design_metabox($post_type, $post, $default_design) {
         $design_meta = get_post_meta($post->ID, '_' . $post_type . '_design', true);
         $current = $design_meta ? $design_meta['id'] : $default_design;
-        if (!$design_meta['options']) {
+        if (!key_exists('options', $design_meta['options'])) {
             $design_meta['options'] = array();
         }
         wp_nonce_field('choose_design', '_design_nonce', false);
