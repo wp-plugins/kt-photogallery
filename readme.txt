@@ -137,8 +137,7 @@ function render_my_gallery_design ($post) {
 
 Basic integration into [Twenty Fifteen](https://wordpress.org/themes/twentyfifteen):
 
-`<?php
-# single-photogallery.php
+`<?php # single-photogallery.php
 get_header();
 ?>
 <div id="primary" class="content-area">
