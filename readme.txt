@@ -34,9 +34,11 @@ If you install this plugin, create albums and galleries and include them into yo
 **Language**
 
 This plugin is in English (en_US) by default but comes with a German (de_DE) po-file.
-There is also a pot file containing untranslated strings so you can use it as a starting point if you wish to translate this plugin.
-See also [Using Localizations](https://developer.wordpress.org/plugins/internationalization/localization/#using-localizations).
+There is also a pot file containing untranslated strings so you can use it as a starting point if you wish to translate this plugin.  
+See also [Using Localizations](https://developer.wordpress.org/plugins/internationalization/localization/#using-localizations).  
 And especially [WordPress - Poedit: Translation Secrets](http://www.cssigniter.com/ignite/wordpress-poedit-translation-secrets/).
+
+If you want your translation included in the next version of Photogallery, don't hesitate and let me know.
 
 1. Get [Poedit](http://poedit.net).
 2. Open the the pot file with Poedit and translate it.
@@ -45,7 +47,7 @@ And especially [WordPress - Poedit: Translation Secrets](http://www.cssigniter.c
 **PHP API**
 
 I have included a number of functions for fetching album, image and thumbnail IDs associated with a gallery or album.
-Please not that all methods starting with an underscore are considered internal and are briefly documented here for the sake of completeness. Although they are publicly accessible you should not use them directly unless you know what you are doing.
+Please not that all methods starting with an underscore are considered internal thouth they are not documented here. Although they are publicly accessible you should not use them directly unless you know what you are doing.
 
 You do not have to create a new kt_Photogallery instance, there is already one in the global namespace.  
 Access all public methods via `$kt_Photogallery`. Don't forget to pull it into the current scope if you want to use it inside a function:
@@ -105,49 +107,6 @@ The design will be available in the Album Design metabox during editing
 
 - **`$kt_Photogallery->render`**  
 Main output method. Depending on the current post type the method prints out a design for a gallery or album.
-
-**Internal**
-
-- **`$kt_Photogallery->_add_custom_album_columns`** - Filter for custom post type specific table columns
-- **`$kt_Photogallery->_add_custom_gallery_columns`** - Filter for custom post type specific table columns
-- **`$kt_Photogallery->_add_album_metaboxes`** - Handler for hook `add_meta_boxes_photoalbum`
-- **`$kt_Photogallery->_add_gallery_metaboxes`** - Handler for hook `add_meta_boxes_photogallery`
-- **`$kt_Photogallery->_add_help_tabs`** - Handler for hook `admin_head`. Adds post type specific help tabs
-- **`$kt_Photogallery->_ajax_load_albums`** - Ajax handler for action `load_albums`
-- **`$kt_Photogallery->_deprecated`** - Helper method showing a waring if some deprecated is used
-- **`$kt_Photogallery->_enqueue_scripts`** - Handler for hook `admin_enqueue_scripts`
-- **`$kt_Photogallery->_error`** - Helper method for error triggering with proper function backtrace
-- **`$kt_Photogallery->_init`** - Handler for hook `plugins_loaded`
-- **`$kt_Photogallery->_menu`** - Handler for hook `admin_menu`. Adds missing 'New Album' link to the menu
-- **`$kt_Photogallery->_register_post_types`** - Registers custom post types `photogallery` and `photoalbum`
-- **`$kt_Photogallery->_render_album_design_metabox`** - Handler for `add_meta_box()`
-- **`$kt_Photogallery->_render_album_thumbnail_metabox`** - Handler for `add_meta_box()`
-- **`$kt_Photogallery->_render_custom_album_columns`** - Handler for hook `manage_photoalbum_posts_custom_column`. Renders custom post type specific table columns
-- **`$kt_Photogallery->_render_custom_gallery_columns`** - Handler for hook `manage_photogallery_posts_custom_column`. Renders custom post type specific table columns
-- **`$kt_Photogallery->_render_grid`** - Handler for `add_meta_box()`
-- **`$kt_Photogallery->_render_grid_metabox`** - Handler for hook `edit_form_after_title`
-- **`$kt_Photogallery->_render_gallery_design_metabox`** - Handler for `add_meta_box()`
-- **`$kt_Photogallery->_rewrite_flush`** - Handler for `register_activation_hook()`
-- **`$kt_Photogallery->_save_gallery_metadata`** - Handler for hook `save_post_photogallery`
-- **`$kt_Photogallery->_save_album_metadata`** - Handler for hook `save_post_photoalbum`
-- **`$kt_Photogallery->_slim_editor`** - Filter for TinyMCE init options
-- **`$kt_Photogallery->_update_messages`** - Filter for custom post type specific feedback messages
-
-**Protected**
-
-- **`$kt_Photogallery->ensure`** - Helper method for fool-proofed `$_REQUEST` value fetching
-- **`$kt_Photogallery->get_meta`** - Helper method for post meta retrieval and processing
-- **`$kt_Photogallery->help_sidebar`** - Helper for adding the sidebar to the help tabs
-- **`$kt_Photogallery->maybe_update`** - Contains update procedures and version management
-- **`$kt_Photogallery->register_default_designs`** - Adds the default album and gallery designs
-- **`$kt_Photogallery->register_design`** - Helper method for registering a new design
-- **`$kt_Photogallery->render_album`** - Helper method for rendering album HTML to be displayed on the backend  
-- **`$kt_Photogallery->render_default_album_list`** - Handler for `add_album_design`
-- **`$kt_Photogallery->render_default_gallery_list`** - Handler for `add_gallery_design`
-- **`$kt_Photogallery->render_default_album_grid`** - Handler for `add_album_design`
-- **`$kt_Photogallery->render_default_gallery_grid`** - Handler for `add_gallery_design`
-- **`$kt_Photogallery->render_design_metabox`** - Helper for `$kt_Photogallery->_render_album_design_metabox` and `$kt_Photogallery->_render_gallery_design_metabox`
-- **`$kt_Photogallery->save_design_metadata`** - Helper method for fetching, processing and saving design metadata. Option filters are called here.
 
 **jQuery `SelectSort` Plugin** version 1.1
 
