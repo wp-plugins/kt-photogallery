@@ -58,7 +58,7 @@ class kt_Photogallery {
         $this->maybe_update();
     }
 
-    protected function maybe_update(){
+    protected function maybe_update() {
         add_option('kt_photogallery_version', self::VERSION);
     }
 
@@ -246,7 +246,7 @@ class kt_Photogallery {
         }
     }
 
-        public function _register_post_types() {
+    public function _register_post_types() {
         register_post_type('photogallery', array(
             'label' => __('Photogalleries', 'kt-photogallery'),
             'description' => __('A custom post type for photo galleries', 'kt-photogallery'),
@@ -531,26 +531,15 @@ class kt_Photogallery {
                     break;
                 default:
                     # something else is going on, better cancel
-                    return $html;
+                    return '';
             }
-            $thumb = false;
-            $thumb_ID = get_post_meta($album_ID, '_photoalbum_thumbnail', true);
-            if ($thumb_ID) {
-                $thumb = wp_get_attachment_image_src($thumb_ID, 'thumbnail');
-                if (!$thumb) {
-                    $thumb = wp_get_attachment_image_src($thumb_ID, 'full');
-                }
-            }
+            $thumb = $this->get_thumbnail_src($album_ID);
             $thumb_html = '';
             if ($thumb) {
                 $thumb_html = '<img src="' . $thumb[0] . '" width="' . $thumb[1] . '" height="' . $thumb[2] . '" alt />';
             }
 
-            $image_IDs = get_post_meta($album_ID, '_photoalbum_images', true);
-            $image_count = 0;
-            if ($image_IDs) {
-                $image_count = count(explode(',', $image_IDs));
-            }
+            $image_count = $this->get_image_count($album_ID);
             if ($image_count) {
                 $count_str = sprintf(_n('%d Image', '%d Images', $image_count, 'kt-photogallery'), $image_count);
             } else {
@@ -587,28 +576,25 @@ class kt_Photogallery {
             echo '
 <div id="album_dialog" class="kt-grid"></div>
 <div id="album_grid" class="kt-grid" data-no-items="' . __('- No Albums -', 'kt-photogallery') . '">';
-            $album_meta = get_post_meta($post->ID, '_photogallery_albums', true);
-            if ($album_meta) {
-                $album_IDs = explode(',', $album_meta);
+            $album_IDs = $this->get_albums($post->ID);
+            if ($album_IDs) {
                 foreach ($album_IDs as $album_ID) {
-                    echo $album_html = $this->render_album($album_ID);
+                    echo $this->render_album($album_ID);
                 }
             }
         } else {
             wp_nonce_field('choose_images', '_images_nonce');
             echo '
 <div id="image_grid" class="kt-grid" data-no-items="' . __('- No Images -', 'kt-photogallery') . '">';
-            $image_meta = get_post_meta($post->ID, '_photoalbum_images', true);
-            if ($image_meta) {
-                $image_IDs = explode(',', $image_meta);
+            $image_IDs = $this->get_images($post->ID);
+            if ($image_IDs) {
                 foreach ($image_IDs as $image_ID) {
                     $thumbnail = wp_get_attachment_image_src($image_ID, 'thumbnail');
                     if ($thumbnail) {
-                        echo '
-    <figure class="image" title="' . esc_attr(get_the_title($image_ID)) . '">
-        <input type="hidden" name="images[]" value="' . $image_ID . '" />
-        <span class="kt-thumbnail"><img src="' . $thumbnail[0] . '" width="' . $thumbnail[1] . '" height="' . $thumbnail[2] . '" alt /></span>
-    </figure>';
+                        echo '<figure class="image" title="' . esc_attr(get_the_title($image_ID)) . '">
+    <input type="hidden" name="images[]" value="' . $image_ID . '" />
+    <span class="kt-thumbnail"><img src="' . $thumbnail[0] . '" width="' . $thumbnail[1] . '" height="' . $thumbnail[2] . '" alt /></span>
+</figure>';
                     }
                 }
             }
@@ -635,9 +621,9 @@ class kt_Photogallery {
         add_meta_box('album_design', __('Album Design', 'kt-photogallery'), array($this, '_render_album_design_metabox'), 'photoalbum', 'side');
     }
 
-    protected function render_design_metabox($post_type, $post, $default_design) {
-        $design_meta = get_post_meta($post->ID, '_' . $post_type . '_design', true);
-        if($design_meta == ''){
+    protected function render_design_metabox($post, $default_design) {
+        $design_meta = get_post_meta($post->ID, '_' . $post->post_type . '_design', true);
+        if ($design_meta == '') {
             $design_meta = array();
         }
         $current = $design_meta ? $design_meta['id'] : $default_design;
@@ -645,7 +631,7 @@ class kt_Photogallery {
             $design_meta['options'] = array();
         }
         wp_nonce_field('choose_design', '_design_nonce', false);
-        $designs = $GLOBALS['kt-' . $post_type . '-designs'];
+        $designs = $GLOBALS['kt-' . $post->post_type . '-designs'];
         foreach ($designs as $design_ID => $setup) {
             $icon_class = ' dashicons-before';
             $icon = '';
@@ -688,11 +674,11 @@ class kt_Photogallery {
     }
 
     public function _render_gallery_design_metabox($gallery) {
-        $this->render_design_metabox('photogallery', $gallery, 'list');
+        $this->render_design_metabox($gallery, 'list');
     }
 
     public function _render_album_design_metabox($album) {
-        $this->render_design_metabox('photoalbum', $album, 'grid');
+        $this->render_design_metabox($album, 'grid');
     }
 
     public function _render_album_thumbnail_metabox($album) {
@@ -718,11 +704,11 @@ class kt_Photogallery {
         if ($albums_nonce !== null && wp_verify_nonce($albums_nonce, 'choose_albums')) {
             $album_IDs = $this->ensure('albums');
             if ($album_IDs !== null && is_array($album_IDs)) {
-                $album_IDs = array_filter(array_map('trim', $album_IDs));
+                $album_IDs = array_filter(array_map('intval', $album_IDs));
                 update_post_meta($ID, '_photogallery_albums', implode(',', $album_IDs));
             }
         }
-        $this->save_design_metadata($ID, 'photogallery', 'list');
+        $this->save_design_metadata(get_post($ID), 'list');
     }
 
     public function _save_album_metadata($ID) {
@@ -740,21 +726,22 @@ class kt_Photogallery {
         if ($images_nonce !== null && wp_verify_nonce($images_nonce, 'choose_images')) {
             $image_IDs = $this->ensure('images');
             if ($image_IDs !== null && is_array($image_IDs)) {
-                $image_IDs = array_filter(array_map('trim', $image_IDs));
+                $image_IDs = array_filter(array_map('intval', $image_IDs));
                 update_post_meta($ID, '_photoalbum_images', implode(',', $image_IDs));
             }
         }
-        $this->save_design_metadata($ID, 'photoalbum', 'grid');
+        $this->save_design_metadata(get_post($ID), 'grid');
     }
 
-    protected function save_design_metadata($ID, $post_type, $default_design) {
+    protected function save_design_metadata($post, $default_design) {
         $design_nonce = $this->ensure('_design_nonce');
         if ($design_nonce !== null && wp_verify_nonce($design_nonce, 'choose_design')) {
-            $design_IDs = array_keys($GLOBALS['kt-' . $post_type . '-designs']);
+            $stash = 'kt-' . $post->post_type . '-designs';
+            $design_IDs = array_keys($GLOBALS[$stash]);
             $chosen_design = $this->ensure('design', $design_IDs, $default_design);
             $options = array();
             foreach ($design_IDs as $design_ID) {
-                $setup = $GLOBALS['kt-' . $post_type . '-designs'][$design_ID];
+                $setup = $GLOBALS[$stash][$design_ID];
                 if ($setup['options']) {
                     $defaults = $setup['defaults'];
                     $options[$design_ID] = array();
@@ -762,11 +749,11 @@ class kt_Photogallery {
                         $options[$design_ID][$default_key] = $this->ensure($default_key, null, $default_value);
                     }
                     if ($setup['filter']) {
-                        $options[$design_ID] = call_user_func($setup['filter'], $options[$design_ID], $defaults, get_post($ID));
+                        $options[$design_ID] = call_user_func($setup['filter'], $options[$design_ID], $defaults, get_post($post->ID));
                     }
                 }
             }
-            update_post_meta($ID, '_' . $post_type . '_design', array(
+            update_post_meta($stash, array(
                 'id' => $chosen_design,
                 'options' => $options
             ));
@@ -791,7 +778,7 @@ class kt_Photogallery {
     }
 
     public function _deprecated($function, $version, $alternative = null) {
-        $this->_error('<code>'.$function . '</code> is depricated since Photogallery version ' . $version . ' and will be removed soon.' . ($alternative ? ' Consider using <code>Photogallery::' . $alternative . '</code>.' : ''));
+        $this->_error('<code>' . $function . '</code> is depricated since Photogallery version ' . $version . ' and will be removed soon.' . ($alternative ? ' Consider using <code>Photogallery::' . $alternative . '</code>.' : ''));
     }
 
     protected function register_default_designs() {
@@ -857,7 +844,7 @@ class kt_Photogallery {
 
     protected function register_design($post_type, $id, $options) {
         $_id = sanitize_key($id);
-        if ($_id == '' || !$options['render']) {
+        if ($_id == '' || !is_array($options) || !$options['render']) {
             return false;
         }
         $setup = wp_parse_args($options, array(
@@ -873,11 +860,11 @@ class kt_Photogallery {
             $setup['defaults'] = array();
             $setup['filter'] = null;
         }
-        $key = 'kt-' . $post_type . '-designs';
-        if (!key_exists($key, $GLOBALS)) {
-            $GLOBALS[$key] = array();
+        $stash = 'kt-' . $post_type . '-designs';
+        if (!key_exists($stash, $GLOBALS)) {
+            $GLOBALS[$stash] = array();
         }
-        $GLOBALS[$key][$_id] = $setup;
+        $GLOBALS[$stash][$_id] = $setup;
         return true;
     }
 
@@ -1078,7 +1065,13 @@ class kt_Photogallery {
         if ($album) {
             $thumbnail_ID = get_post_meta($album_ID, '_photoalbum_thumbnail', true);
             if (!$thumbnail_ID && $fallback) {
-                $thumbnail_ID = reset($this->get_images($album_ID));
+                $image_IDs = $this->get_images($album_ID);
+                if($image_IDs){
+                    $thumbnail_ID = $image_IDs[0];
+                }
+            }
+            if(!$thumbnail_ID){
+                $thumbnail_ID = false;
             }
         }
         return $thumbnail_ID;

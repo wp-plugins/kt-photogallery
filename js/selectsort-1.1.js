@@ -6,12 +6,18 @@
  * http://www.gnu.org/licenses/gpl-2.0.html
  */
 window.SelectSort = (function ($) {
+    var $body = $('body');
+    var $document = $(document);
     var pythagoras = function (x, y) {
-        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        return Math.sqrt(x * x + y * y);
+    };
+    var confine = function(min, x, max) {
+        return Math.max(min, Math.min(x, max));
+    };
+    var isCTRL = function(e){
+        return e.ctrlKey || e.metaKey || e.shiftKey;
     };
     var S = function (target, options) {
-        var $document = $(document);
-        var $body = $('body');
         var o = $.extend({ }, S.defaults, options);
         $(target).each(function () {
             var scope = this;
@@ -27,8 +33,8 @@ window.SelectSort = (function ($) {
                     $current.toggleClass(o.selected);
                 } else if (e.shiftKey && indexA !== null) {
                     var indexB = $current.index();
-                    var a = Math.min(indexB, indexA);
-                    var b = Math.max(indexB, indexA) + 1;
+                    var a = Math.min(indexA, indexB);
+                    var b = Math.max(indexA, indexB) + 1;
                     children().removeClass(o.selected).slice(a, b).addClass(o.selected);
                 } else {
                     children().removeClass(o.selected);
@@ -52,7 +58,7 @@ window.SelectSort = (function ($) {
                 $target.trigger('change', [ some, $selected, Cache ]);
             };
             var deselect = function (e) {
-                if ((e.target == scope || $(e.target).closest(scope).length == 0) && !(e.metaKey || e.ctrlKey || e.shiftKey)) {
+                if ((e.target == scope || $(e.target).closest(scope).length == 0) && !isCTRL(e)) {
                     children().removeClass(o.selected);
                     can_deselect = true;
                     $target.off('mousedown', deselect);
@@ -188,7 +194,6 @@ window.SelectSort = (function ($) {
                         } else {
                             $helper = $(o.helper);
                         }
-                        console.log($helper);
                         $body.append($helper);
                         $document.on('mousemove', sortHelper);
                     }
@@ -197,8 +202,8 @@ window.SelectSort = (function ($) {
             };
             var doSelect = function (e) {
                 e.preventDefault();
-                x2 = Math.max(0, Math.min(e.pageX - offset.left, w1));
-                y2 = Math.max(0, Math.min(e.pageY - offset.top, h1));
+                x2 = confine(0, e.pageX - offset.left, w1);
+                y2 = confine(0, e.pageY - offset.top, h1);
                 w = Math.abs(x1 - x2);
                 h = Math.abs(y1 - y2);
                 x = Math.min(x1, x2);
@@ -210,12 +215,11 @@ window.SelectSort = (function ($) {
                     height: h + 'px',
                     display: 'block'
                 });
-                var ctrl = e.ctrlKey || e.metaKey || e.shiftKey;
                 var $updated = $();
                 $.each(Cache, function (_, c) {
                     c.$.toggleClass(o.selected, c.s);
                     if (!(c.x + c.w < x || x + w < c.x || c.y + c.h < y || y + h < c.y)) {
-                        $updated.push(c.$.toggleClass(o.selected, !(ctrl && c.s))[0]);
+                        $updated.push(c.$.toggleClass(o.selected, !(isCTRL(e) && c.s))[0]);
                     }
                 });
                 if ($updated.length) {
