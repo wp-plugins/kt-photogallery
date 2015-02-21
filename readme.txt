@@ -2,7 +2,7 @@
 Contributors: kungtiger
 Requires at least: 4.0
 Tested up to: 4.1
-Stable tag: 1.0
+Stable tag: 1.0.1
 Tags: photo, image, gallery, album
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -218,7 +218,7 @@ It offers:
 
 **Manual installation**
 
-1. Upload all files found inside the zip archive to /wp-content/plugins/photogallery
+1. Upload all files found inside the zip archive to /wp-content/plugins/kt-photogallery
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Refere to the API section for further details on how to integrate this plugin into a theme
 
