@@ -298,6 +298,12 @@ Initial alpha release.
 - Added API for fetching albums, images and thumbnails
 - Deprecated `get_photogallery` and `get_photoalbum`
 
+= 1.0.1 =
+- Removed dead code
+- Reduced redundancies
+- Fixed some translation strings
+- Improved examples inside readme.txt
+
 == Upgrade Notice ==
 
 = 0.9 =
@@ -305,3 +311,6 @@ Initial alpha release.
 
 = 1.0 =
 Note that `get_photogallery` and `get_photoalbum` are now deprecated in favour of OOP versions
+
+= 1.0.1 =
+Maintenance update, no changes to the API
