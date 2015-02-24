@@ -10,11 +10,11 @@ window.SelectSort = (function ($) {
         return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     };
     var S = function (target, options) {
-        var $document = $(document);
-        var $body = $('body');
         var o = $.extend({ }, S.defaults, options);
         $(target).each(function () {
             var scope = this;
+            var $document = $(document);
+            var $body = $('body');
             var $target = $(this);
             var $current, $set, $marquee, $helper;
             var indexA, offset, x, x1, x2, y, y1, y2, w, w1, h, h1, Cache;
