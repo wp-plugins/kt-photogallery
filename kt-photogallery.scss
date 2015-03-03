@@ -1,0 +1,345 @@
+$border_color: #E5E5E5;
+$background_color: #F5F5F5;
+$remove_color: #900;
+$the_blue: #0074A2;
+
+@mixin noselect {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+/* UI Helper */
+.ui-selected {
+    border-color: white !important;
+    border-radius: 3px;
+    box-shadow: 0 0 0 1px #FFF, 0 0 2px 4px $the_blue !important;
+    cursor: move !important;
+}
+.ui-selected .kt-photogallery-no-thumbnail::after,
+.ui-selected .album_title {
+    color: $the_blue !important;
+}
+.kt-grid.ui-sorting .ui-selected {
+    margin: 7px;
+    border: 3px dashed $border_color !important;
+    box-shadow: none !important;
+}
+.kt-grid.ui-sorting .ui-selected * {
+    visibility: hidden;
+}
+.kt-grid.ui-sorting,
+.kt-grid.ui-sorting * {
+    cursor: move !important;
+}
+.ui-marquee {
+    position: absolute;
+    box-sizing: border-box;
+    border: 1px dotted $the_blue;
+    background-color: fade-out($the_blue, .75);
+}
+.kt-grid.ui-selecting,
+.kt-grid.ui-selecting * {
+    cursor: crosshair !important;
+}
+.ui-sort-helper {
+    position: absolute;
+    margin: 10px 0 0 12px;
+    z-index: 99999;
+}
+.ui-sort-helper img {
+    position: absolute;
+    width: 75px;
+    height: auto;
+    top: 0;
+    left: 0;
+    opacity: 1;
+    z-index: 3;
+}
+.ui-sort-helper img + img {
+    left: 10px;
+    top: 4px;
+    opacity: .8;
+    z-index: 2;
+}
+.ui-sort-helper img + img + img {
+    left: 20px;
+    top: 8px;
+    opacity: .4;
+    z-index: 1;
+}
+
+/* WP_List_Table  */
+.wp-list-table .column-thumbnail {
+    width: 120px;
+    text-align: center;
+}
+.wp-list-table .kt-photogallery-thumbnail {
+    max-width: 100px;
+    height: auto;
+}
+.wp-list-table .column-thumbnail ~ .column-title strong {
+    margin-top: 25px;
+}
+.wp-list-table .column-thumbnail ~ .column-title strong a {
+    font-size: 15px !important;
+}
+.wp-list-table .column-album_count,
+.wp-list-table .column-image_count {
+    width: 100px;
+    text-align: center;
+}
+
+/* Postbox */
+#exposed-sortables {
+    margin-top: 25px;
+    margin-bottom: -20px;
+}
+#griddiv .inside {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+#griddiv h3 {
+    cursor: pointer;
+}
+#griddiv .handlediv::before {
+    content: "\f142";
+    position: relative;
+    display: inline-block;
+    top: 0;
+    right: 12px;
+    padding: 8px 10px;
+    font: normal 20px/1 'dashicons';
+    text-decoration: none !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    speak: none;
+}
+#griddiv.closed .handlediv::before {
+    content: "\f140";
+}
+
+
+/* Thumbnail */
+.kt-thumbnail {
+    position: relative;
+    display: inline-block;
+    box-sizing: border-box;
+}
+.kt-thumbnail img {
+    float: left;
+    background-color: #FFF;
+}
+.kt-thumbnail:empty {
+    width: 100px;
+    height: 100px;
+    border: 1px solid $border_color;
+    background-color: #FFF;
+}
+.kt-thumbnail:empty::before {
+    content: "\f161";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 30px;
+    height: 30px;
+    margin: auto auto;
+    font: normal 30px/1 "dashicons";
+    color: #999;
+}
+.wp-list-table .kt-thumbnail img,
+.album .kt-thumbnail img {
+    max-height: 100px;
+    width: auto;
+}
+
+
+/* Toolbar */
+.grid_toolbar {
+    padding: 5px 10px;
+    border-bottom: 1px solid $border_color;
+    background-color: $background_color;
+}
+#griddiv.removeable #remove,
+#album_thumbnail .inside {
+    display: inline-block;
+}
+.grid_toolbar #remove,
+#griddiv.closed .inside,
+#album_thumbnail.closed .inside,
+#thumbnail:empty ~ #clear_thumbnail {
+    display: none;
+}
+
+
+/* Grid */
+.kt-grid {
+    position: relative;
+    box-sizing: border-box;
+    display: inline-block;
+    float: left;
+    width: 100% !important;
+    padding: 10px !important;
+    @include noselect;
+}
+#album_dialog {
+    float: none;
+}
+.kt-grid:empty {
+    padding: 20px;
+}
+.kt-grid:empty::before {
+    content: attr(data-no-items);
+}
+
+/* Grid Item */
+.kt-grid figure {
+    margin: 10px;
+    cursor: pointer;
+}
+.kt-grid figure,
+.kt-grid figure * {
+    display: inline-block;
+    float: left;
+}
+.kt-grid figure:hover {
+    box-shadow: 0 0 0 1px #FFF, 0 0 0 3px #999;
+    border-radius: 3px;
+}
+.kt-grid .image:hover img,
+.kt-grid .image.ui-selected img {
+    border-radius: 3px;
+}
+.kt-grid .album:hover img,
+.kt-grid .album.ui-selected img {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+.kt-grid .album:hover aside,
+.kt-grid .album.ui-selected aside {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.kt-grid .album {
+    position: relative;
+    background-color: $background_color;
+}
+.kt-grid .album aside {
+    height: 98px;
+    padding: 0 15px 0 10px;
+    border: 1px solid $border_color;
+    border-left: none;
+}
+
+.kt-grid aside span {
+    clear: both;
+    white-space: nowrap;
+    font-size: 11px;
+}
+.kt-grid aside .album_title {
+    font-weight: 600;
+    font-size: 14px;
+    width: 100%;
+    max-width: 200px;
+    margin-top: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.kt-grid aside .album_author {
+    color: #777;
+    margin-bottom: 8px;
+}
+
+
+/* Thumbnail Chooser */
+#album_thumbnail .inside {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+#album_thumbnail .inside-top,
+#album_thumbnail .inside-bottom {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 100%;
+    float: left;
+    clear: both;
+}
+#album_thumbnail .inside-top {
+    margin: 10px 0;
+    text-align: center;
+}
+#album_thumbnail .inside-bottom {
+    padding: 10px;
+    margin-bottom: -2px;
+    border-top: 1px solid $border_color;
+    background-color: $background_color;
+}
+#clear_thumbnail {
+    float: left;
+    padding: 5px 10px;
+    cursor: pointer;
+    color: $remove_color;
+}
+#choose_thumbnail {
+    float: right;
+}
+
+
+/* Design Chooser */
+#album_design .inside,
+#gallery_design .inside {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 10px 15px;
+    margin: 0;
+    width: 100%;
+}
+.design-option {
+    display: inline-block;
+    float: left;
+    clear: both;
+    margin: 5px 0;
+}
+.design-option input,
+.design-option label,
+.design-option label * {
+    display: inline-block;
+    float: left;
+}
+.design-option input {
+    margin: 2px 6px 0 0;
+}
+.design-option .design-icon {
+    margin-right: 7px;
+    color: #DDD;
+}
+.design-option .design-icon img {
+    opacity: .2;
+    transition: opacity .100s linear;
+}
+.design-option > input:checked + label .design-icon {
+    color: #666;
+}
+.design-option > input:checked + label .design-icon img {
+    opacity: 1;
+}
+.design-option .design-label {
+    line-height: 20px;
+    vertical-align: middle;
+}
+.design-option .design-options {
+    display: none;
+}
+.design-option > input:checked + label + .design-options {
+    display: inline-block;
+    float: left;
+    width: 100%;
+    box-sizing: border-box;
+}

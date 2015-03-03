@@ -1,8 +1,8 @@
 === Photogallery ===
 Contributors: kungtiger
 Requires at least: 4.0
-Tested up to: 4.1
-Stable tag: 1.0.1
+Tested up to: 4.1.1
+Stable tag: 1.1
 Tags: photo, image, gallery, album
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -69,7 +69,7 @@ function render_my_gallery_design ($post) {
   }
 }
 
-function render_my_custom_album_design ($post) {
+function render_my_album_design ($post) {
   global $kt_Photogallery;
   $image_IDs = $kt_Photogallery->get_images($post);
   if ($image_IDs) {
@@ -288,20 +288,39 @@ You have to write template files for custom post types and add them to your them
 
 == Changelog ==
 
-= 0.9 =
-Initial alpha release.
+= 1.1 =
+- Design Metabox will be hidden if no designs are registered
+- Fixed `get_albums()`: protected and private albums are now properly included or excluded
+- Fixed `get_meta()`
+- Fixed SQL query inside `get_photoalbum()`
+- Added API to SelectSort
+- Merged `gallery.js` and `album.js`
+
+= 1.0.1 =
+- Removed dead code
+- Reduced redundancies
+- Fixed some translation strings
+- Improved examples inside readme.txt
 
 = 1.0 =
 - Improved custom post type integration
-- Added default design for galleries and albums
 - Added support of custom designs
 - Added API for fetching albums, images and thumbnails
 - Deprecated `get_photogallery` and `get_photoalbum`
 
-== Upgrade Notice ==
-
 = 0.9 =
 Initial alpha release.
 
+== Upgrade Notice ==
+
+= 1.1 =
+Fixes some bugs
+
+= 1.0.1 =
+Maintenance update, no changes to the API
+
 = 1.0 =
 Note that `get_photogallery` and `get_photoalbum` are now deprecated in favour of OOP versions
+
+= 0.9 =
+Initial alpha release.

@@ -4,7 +4,7 @@
  * Plugin Name: Photogallery
  * Plugin URI: https://wordpress.org/plugins/kt-photogallery
  * Description: Create photo-galleries with ease.
- * Version: 1.0
+ * Version: 1.1
  * Author: Daniel Schneider
  * Author URI: http://profiles.wordpress.org/kungtiger
  * License: GPL2 or later
@@ -17,7 +17,8 @@ $kt_Photogallery = new kt_Photogallery();
 
 class kt_Photogallery {
 
-    const VERSION = '1.0';
+    const VERSION = '1.1';
+    const SELECTSORT = '1.2';
 
     protected $dir;
     protected $url;
@@ -45,7 +46,8 @@ class kt_Photogallery {
         add_filter('manage_photogallery_posts_columns', array($this, '_add_custom_gallery_columns'));
         add_action('manage_photogallery_posts_custom_column', array($this, '_render_custom_gallery_columns'), 1, 2);
 
-        $this->register_default_designs();
+        $GLOBALS['kt-photogallery-designs'] = array();
+        $GLOBALS['kt-photoalbum-designs'] = array();
     }
 
     public function _rewrite_flush() {
@@ -60,6 +62,10 @@ class kt_Photogallery {
 
     protected function maybe_update() {
         add_option('kt_photogallery_version', self::VERSION);
+        $version = get_option('kt_photogallery_version');
+        if (self::VERSION > $version) {
+            update_option('kt_photogallery_version', self::VERSION);
+        }
     }
 
     public function _menu() {
@@ -67,134 +73,57 @@ class kt_Photogallery {
         $submenu['edit.php?post_type=photogallery'][12] = array(__('New Album', 'kt-photogallery'), 'edit_posts', 'post-new.php?post_type=photoalbum');
     }
 
-    public function _add_custom_album_columns($current_columns) {
-        # try to insert 'thumbnail' after 'cb' or before 'title'
-        $_new = array();
-        $added_thumbnail = false;
-        foreach ($current_columns as $key => $text) {
-            if (!$added_thumbnail) {
-                if ($key == 'cb') {
-                    $_new[$key] = $text;
-                    $_new['thumbnail'] = '';
-                    $added_thumbnail = true;
-                    continue;
-                }
-                if ($key == 'title') {
-                    $_new['thumbnail'] = '';
-                    $_new[$key] = $text;
-                    $added_thumbnail = true;
-                    continue;
+    protected function add_column(&$columns, $key, $title = '') {
+        if (key_exists($key, $columns) || func_num_args() <= 3) {
+            $columns[$key] = $title;
+            return;
+        }
+        $columns[$key] = $title;
+        $args = func_get_args();
+        $rules = array_slice($args, 3);
+        $keys = array_keys($columns);
+        foreach ($rules as $rule) {
+            if ($rule == 'prepend') {
+                array_unshift($keys, $key);
+                break;
+            } else if ($rule == 'append') {
+                array_push($keys, $key);
+                break;
+            } else {
+                list($placement, $existing_key) = explode(':', $rule, 2);
+                $index = array_search($existing_key, $keys);
+                if ($index !== false) {
+                    $index += $placement == 'after' ? 1 : 0;
+                    array_splice($keys, $index, 0, array($key));
+                    break;
                 }
             }
-            $_new[$key] = $text;
         }
-
-        # try to insert 'image_count' after 'title' or before 'author'
-        $_new2 = array();
-        $added_count = false;
-        foreach ($_new as $key => $text) {
-            if (!$added_count) {
-                if ($key == 'title') {
-                    $_new2[$key] = $text;
-                    $_new2['image_count'] = __('Image Count', 'kt-photogallery');
-                    $added_count = true;
-                    continue;
-                }
-                if ($key == 'author') {
-                    $_new2['image_count'] = __('Image Count', 'kt-photogallery');
-                    $_new2[$key] = $text;
-                    $added_count = true;
-                    continue;
-                }
-            }
-            $_new2[$key] = $text;
+        $new = array();
+        foreach ($keys as $key) {
+            $new[$key] = $columns[$key];
         }
-
-        # if we did not add 'thumbnail' just prepend it
-        $_new3 = array();
-        if (!$added_thumbnail) {
-            $_new3['thumbnail'] = '';
-            foreach ($_new2 as $key => $text) {
-                $_new3[$key] = $text;
-            }
-        } else {
-            $_new3 = $_new2;
-        }
-
-        # if we did not add 'image_count' insert it after 'thumbnail'
-        $new_columns = array();
-        if (!$added_count) {
-            foreach ($_new3 as $key => $text) {
-                $new_columns[$key] = $text;
-                if ($key == 'thumbnail') {
-                    $new_columns['image_count'] = __('Image Count', 'kt-photogallery');
-                }
-            }
-        } else {
-            $new_columns = $_new3;
-        }
-
-        return $new_columns;
+        $columns = $new;
     }
 
-    public function _add_custom_gallery_columns($current_columns) {
-        # try to insert 'album_count' after 'title' or before 'author'
-        $_new = array();
-        $added_count = false;
-        foreach ($current_columns as $key => $text) {
-            if (!$added_count) {
-                if ($key == 'title') {
-                    $_new[$key] = $text;
-                    $_new['album_count'] = __('Album Count', 'kt-photogallery');
-                    $added_count = true;
-                    continue;
-                }
-                if ($key == 'author') {
-                    $_new['album_count'] = __('Album Count', 'kt-photogallery');
-                    $_new[$key] = $text;
-                    $added_count = true;
-                    continue;
-                }
-            }
-            $_new[$key] = $text;
-        }
+    public function _add_custom_album_columns($columns) {
+        $this->add_column($columns, 'thumbnail', '', 'after:cb', 'before:title', 'prepend');
+        $this->add_column($columns, 'image_count', __('Image Count', 'kt-photogallery'), 'after:title', 'before:author', 'after:thumbnail');
+        return $columns;
+    }
 
-        # if we did not add 'album_count' insert it after 'cb'
-        $_new2 = array();
-        if (!$added_count) {
-            foreach ($_new as $key => $text) {
-                $_new2[$key] = $text;
-                if ($key == 'cb') {
-                    $_new2['album_count'] = __('Album Count', 'kt-photogallery');
-                    $added_count = true;
-                }
-            }
-        } else {
-            $_new2 = $_new;
-        }
-
-        # if we still did not add 'album_count' just prepend it
-        $new_columns = array();
-        if (!$added_count) {
-            $new_columns['album_count'] = __('Album Count', 'kt-photogallery');
-            foreach ($_new2 as $key => $text) {
-                $new_columns[$key] = $text;
-            }
-        } else {
-            $new_columns = $_new2;
-        }
-        return $new_columns;
+    public function _add_custom_gallery_columns($columns) {
+        $this->add_column($columns, 'album_count', __('Album Count', 'kt-photogallery'), 'after:title', 'before:author', 'after:cb', 'prepend');
+        return $columns;
     }
 
     public function _render_custom_album_columns($column_name, $album_ID) {
         if ($column_name == 'thumbnail') {
             echo '<span class="kt-thumbnail">';
-            $thumbnail_meta = get_post_meta($album_ID, '_photoalbum_thumbnail', true);
-            if ($thumbnail_meta) {
-                $thumbnail = wp_get_attachment_image_src($thumbnail_meta, 'thumbnail');
-                if ($thumbnail) {
-                    echo '<img src="' . $thumbnail[0] . '" alt title="' . esc_attr(get_the_title($thumbnail_meta)) . '" />';
-                }
+            $thumb = $this->get_thumbnail_src($album_ID, false);
+            if ($thumb) {
+                $thumb_ID = $this->get_thumbnail($album_ID, false);
+                echo '<img src="' . $thumb[0] . '" alt title="' . esc_attr(get_the_title($thumb_ID)) . '" />';
             }
             echo '</span>';
         } else if ($column_name == 'image_count') {
@@ -221,12 +150,12 @@ class kt_Photogallery {
     public function _enqueue_scripts() {
         $post_type = get_post_type();
         if (in_array($post_type, array('photogallery', 'photoalbum'))) {
-            wp_enqueue_script('selectsort', $this->url . '/js/selectsort-1.1.js', array('jquery'), '1.1');
-            wp_enqueue_style('kt-photogallery', $this->url . '/css/admin.css', null, '1.0');
+            wp_enqueue_style('kt-photogallery', $this->url . '/kt-photogallery.css', null, self::VERSION);
+            wp_enqueue_script('selectsort', $this->url . '/selectsort-' . self::SELECTSORT . '.js', array('jquery'), self::SELECTSORT);
+            wp_enqueue_script('kt-photogallery', $this->url . '/kt-photogallery.js', array('selectsort'), self::VERSION);
             if ($post_type == 'photogallery') {
                 wp_enqueue_script('jquery-ui-dialog');
                 wp_enqueue_style('wp-jquery-ui-dialog');
-                wp_enqueue_script('kt-photogallery', $this->url . '/js/gallery.js', array('jquery'), '1.0');
                 wp_localize_script('kt-photogallery', 'kt_Photogallery_l10n', array(
                     'add' => __('Add to Gallery', 'kt-photogallery'),
                     'close' => __('Close', 'kt-photogallery'),
@@ -235,8 +164,7 @@ class kt_Photogallery {
             }
             if ($post_type == 'photoalbum') {
                 wp_enqueue_media();
-                wp_enqueue_script('kt-photoalbum', $this->url . '/js/album.js', array('jquery'), '1.0');
-                wp_localize_script('kt-photoalbum', 'kt_Photogallery_l10n', array(
+                wp_localize_script('kt-photogallery', 'kt_Photogallery_l10n', array(
                     'title' => __('Choose Images', 'kt-photogallery'),
                     'add' => __('Add to Album', 'kt-photogallery'),
                     'thumbnail' => __('Choose Thumbnail', 'kt-photogallery'),
@@ -315,37 +243,37 @@ class kt_Photogallery {
         $post = get_post();
         $post_type = $post->post_type;
         if (in_array($post_type, array('photogallery', 'photoalbum'))) {
-            $date = '<strong>' . get_the_date(null, $post) . '</strong>';
-            $permalink = get_permalink($post->ID);
-            $preview_link = esc_url(add_query_arg('preview', 'true', $permalink));
             if ($post_type == 'photoalbum') {
                 $messages[$post_type][1] = __('Album updated.', 'kt-photogallery');
                 $messages[$post_type][4] = __('Album updated', 'kt-photogallery');
-                $messages[$post_type][5] = __('Album published.', 'kt-photogallery');
-                $messages[$post_type][6] = __('Album updated.', 'kt-photogallery');
+                $messages[$post_type][6] = __('Album published.', 'kt-photogallery');
                 $messages[$post_type][7] = __('Album saved', 'kt-photogallery');
                 $messages[$post_type][8] = __('Album submitted.', 'kt-photogallery');
-                $messages[$post_type][9] = sprintf(__('Album scheduled for: $s.', 'kt-photogallery'), $date);
+                $messages[$post_type][9] = __('Album scheduled for: $s.', 'kt-photogallery');
                 $messages[$post_type][10] = __('Album draft updated.', 'kt-photogallery');
-                $s = __('View album', 'kt-photogallery');
+                $view = __('View album', 'kt-photogallery');
             } else {
                 $messages[$post_type][1] = __('Gallery updated.', 'kt-photogallery');
                 $messages[$post_type][4] = __('Gallery updated', 'kt-photogallery');
                 $messages[$post_type][6] = __('Gallery published.', 'kt-photogallery');
                 $messages[$post_type][7] = __('Gallery saved', 'kt-photogallery');
                 $messages[$post_type][8] = __('Gallery submitted.', 'kt-photogallery');
-                $messages[$post_type][9] = sprintf(__('Gallery scheduled for: $s.', 'kt-photogallery'), $date);
+                $messages[$post_type][9] = __('Gallery scheduled for: $s.', 'kt-photogallery');
                 $messages[$post_type][10] = __('Gallery draft updated.', 'kt-photogallery');
-                $s = __('View gallery', 'kt-photogallery');
+                $view = __('View gallery', 'kt-photogallery');
             }
-            $view = sprintf(' <a href="%s">%s</a>', esc_url($permalink), $s);
-            $preview = sprintf(' <a target="_blank" href="%s">%s</a>', $preview_link, $s);
-            $messages[$post_type][1] .= $view;
+            $view_url = get_permalink($post->ID);
+            $preview_url = esc_url(add_query_arg('preview', 'true', $view_url));
+            $view_link = sprintf(' <a href="%s">%s</a>', esc_url($view_url), $view);
+            $preview_link = sprintf(' <a target="_blank" href="%s">%s</a>', $preview_url, $view);
+            $date = '<strong>' . get_the_date(null, $post) . '</strong>';
+            $messages[$post_type][9] = sprintf($messages[$post_type][9], $date);
+            $messages[$post_type][1] .= $view_link;
             $messages[$post_type][5] = false;
-            $messages[$post_type][6] .= $view;
-            $messages[$post_type][8] .= $preview;
-            $messages[$post_type][9] .= $view;
-            $messages[$post_type][10] .= $preview;
+            $messages[$post_type][6] .= $view_link;
+            $messages[$post_type][8] .= $preview_link;
+            $messages[$post_type][9] .= $view_link;
+            $messages[$post_type][10] .= $preview_link;
         }
         return $messages;
     }
@@ -379,12 +307,6 @@ class kt_Photogallery {
 <p>' . __('If you cannot choose a gallery them make sure your checked Galleries in the Screen Options tab.', 'kt-photogallery') . '</p>
 <p>' . __("Depending on your theme's design your gallery will now show up on your Wordpress side.", 'kt-photogallery') . '</p>'
                 ));
-
-                $screen->set_help_sidebar('<p><strong>' . __('For more information:', 'kt-photogallery') . '</strong></p>
-<p><a href="http://codex.wordpress.org/Posts_Screen" target="_blank">' . __('Documentation on Managing Posts', 'kt-phototgallery') . '</a></p>
-<p><a href="https://wordpress.org/support/" target="_blank">' . __('WordPress Support Forums', 'kt-photogallery') . '</a></p>
-<p><a href="https://wordpress.org/support/plugin/kt-photogallery/" target="_blank">' . __('Photogallery Support Forum', 'kt-photogallery') . '</a></p>
-<p><a href="' . $this->url . '/api/documentation.php" target="_blank">' . __('API Documentation', 'kt-photogallery') . '</a></p>');
             } else {
                 $screen->add_help_tab(array(
                     'id' => 'help_general',
@@ -413,12 +335,6 @@ class kt_Photogallery {
 <p>' . __('If you having trouble rearranging your album try dragging your selection over another album. Try to avoid gaps between albums because only if your mouse pointer is over another album will your selection move to a new location.', 'kt-photogallery') . '</p>
 <p>' . __('Hold down <code>Ctrl</code> or <code>Shift</code>, or use your mouse and draw a frame to select more than one album at a time.', 'kt-photogallery') . '</p>'
                 ));
-
-                $screen->set_help_sidebar('<p><strong>' . __('For more information:', 'kt-photogallery') . '</strong></p>
-<p><a href="http://codex.wordpress.org/Posts_Add_New_Screen" target="_blank">' . __('Documentation on Writing and Editing Posts', 'kt-phototgallery') . '</a></p>
-<p><a href="https://wordpress.org/support/" target="_blank">' . __('WordPress Support Forums', 'kt-photogallery') . '</a></p>
-<p><a href="https://wordpress.org/support/plugin/kt-photogallery/" target="_blank">' . __('Photogallery Support Forum', 'kt-photogallery') . '</a></p>
-<p><a href="' . $this->url . '/api/documentation.php" target="_blank">' . __('API Documentation', 'kt-photogallery') . '</a></p>');
             }
         } else if ($screen->post_type == 'photoalbum') {
             if ($screen->base == 'edit') {
@@ -439,12 +355,6 @@ class kt_Photogallery {
     </ul>
 </p>'
                 ));
-
-                $screen->set_help_sidebar('<p><strong>' . __('For more information:', 'kt-photogallery') . '</strong></p>
-<p><a href="http://codex.wordpress.org/Posts_Screen" target="_blank">' . __('Documentation on Managing Posts', 'kt-phototgallery') . '</a></p>
-<p><a href="https://wordpress.org/support/" target="_blank">' . __('WordPress Support Forums', 'kt-photogallery') . '</a></p>
-<p><a href="https://wordpress.org/support/plugin/kt-photogallery/" target="_blank">' . __('Photogallery Support Forum', 'kt-photogallery') . '</a></p>
-<p><a href="' . $this->url . '/api/documentation.php" target="_blank">' . __('API Documentation', 'kt-photogallery') . '</a></p>');
             } else {
                 $screen->add_help_tab(array(
                     'id' => 'help_general',
@@ -480,20 +390,8 @@ class kt_Photogallery {
 <p>' . __('Hold down <code>Ctrl</code> or <code>Shift</code>, or use your mouse and draw a frame to move more than one image at a time.', 'kt-photogallery') . '</p>
 <p>' . __('If you having trouble rearranging your images try dragging your selection over another image. Try to avoid gaps between images because only if your mouse pointer is over another image will your selection move to a new location.', 'kt-photogallery') . '</p>'
                 ));
-
-                $screen->set_help_sidebar('<p><strong>' . __('For more information:', 'kt-photogallery') . '</strong></p>
-<p><a href="http://codex.wordpress.org/Posts_Add_New_Screen" target="_blank">' . __('Documentation on Writing and Editing Posts', 'kt-phototgallery') . '</a></p>
-<p><a href="' . $this->url . '/api/documentation.html" target="_blank">' . __('API Documentation', 'kt-photogallery') . '</a></p>');
             }
         }
-    }
-
-    protected function help_sidebar($screen) {
-        $screen->set_help_sidebar('<p><strong>' . __('For more information:', 'kt-photogallery') . '</strong></p>
-<p><a href="http://codex.wordpress.org/Posts_Screen" target="_blank">' . __('Documentation on Managing Posts', 'kt-phototgallery') . '</a></p>
-<p><a href="https://wordpress.org/support/" target="_blank">' . __('WordPress Support Forums', 'kt-photogallery') . '</a></p>
-<p><a href="https://wordpress.org/plugins/kt-photogallery" target="_blank">' . __('Photogallery API', 'kt-photogallery') . '</a></p>
-<p><a href="https://wordpress.org/support/plugin/kt-photogallery" target="_blank">' . __('Photogallery Support Forum', 'kt-photogallery') . '</a></p>');
     }
 
     public function _ajax_load_albums() {
@@ -502,7 +400,7 @@ class kt_Photogallery {
             die('-1');
         }
         global $wpdb;
-        $album_IDs = $wpdb->get_col("SELECT `ID` FROM `" . $wpdb->posts . "` WHERE `post_type` = 'photoalbum' AND `post_status` NOT IN ('auto-draft', 'trash', 'revision') ORDER BY `post_title`");
+        $album_IDs = $wpdb->get_col("SELECT `ID` FROM `" . $wpdb->posts . "` WHERE `post_type` = 'photoalbum' AND `post_status` IN ('publish', 'draft', 'private', 'future') ORDER BY `post_title`");
         $html = '';
         if ($album_IDs) {
             foreach ($album_IDs as $album_ID) {
@@ -533,10 +431,10 @@ class kt_Photogallery {
                     # something else is going on, better cancel
                     return '';
             }
-            $thumb = $this->get_thumbnail_src($album_ID);
+            $thumb = $this->get_thumbnail_src($album_ID, false);
             $thumb_html = '';
             if ($thumb) {
-                $thumb_html = '<img src="' . $thumb[0] . '" width="' . $thumb[1] . '" height="' . $thumb[2] . '" alt />';
+                $thumb_html = '<img src="' . $thumb[0] . '" width="' . $thumb[1] . '" height="' . $thumb[2] . '" alt draggable="false" style="-moz-user-select: none" />';
             }
 
             $image_count = $this->get_image_count($album_ID);
@@ -593,7 +491,7 @@ class kt_Photogallery {
                     if ($thumbnail) {
                         echo '<figure class="image" title="' . esc_attr(get_the_title($image_ID)) . '">
     <input type="hidden" name="images[]" value="' . $image_ID . '" />
-    <span class="kt-thumbnail"><img src="' . $thumbnail[0] . '" width="' . $thumbnail[1] . '" height="' . $thumbnail[2] . '" alt /></span>
+    <span class="kt-thumbnail"><img src="' . $thumbnail[0] . '" width="' . $thumbnail[1] . '" height="' . $thumbnail[2] . '" alt draggable="false" style="-moz-user-select: none" /></span>
 </figure>';
                     }
                 }
@@ -612,26 +510,34 @@ class kt_Photogallery {
 
     public function _add_gallery_metaboxes() {
         add_meta_box('griddiv', __('Albums', 'kt-photogallery'), array($this, '_render_grid'), 'photogallery', 'exposed');
-        add_meta_box('gallery_design', __('Gallery Design', 'kt-photogallery'), array($this, '_render_gallery_design_metabox'), 'photogallery', 'side');
+        if (count($GLOBALS['kt-photogallery-designs']) > 0) {
+            add_meta_box('gallery_design', __('Gallery Design', 'kt-photogallery'), array($this, '_render_gallery_design_metabox'), 'photogallery', 'side');
+        }
     }
 
     public function _add_album_metaboxes() {
         add_meta_box('griddiv', __('Images', 'kt-photogallery'), array($this, '_render_grid'), 'photoalbum', 'exposed');
         add_meta_box('album_thumbnail', __('Thumbnail', 'kt-photogallery'), array($this, '_render_album_thumbnail_metabox'), 'photoalbum', 'side');
-        add_meta_box('album_design', __('Album Design', 'kt-photogallery'), array($this, '_render_album_design_metabox'), 'photoalbum', 'side');
+        if (count($GLOBALS['kt-photoalbum-designs']) > 0) {
+            add_meta_box('album_design', __('Album Design', 'kt-photogallery'), array($this, '_render_album_design_metabox'), 'photoalbum', 'side');
+        }
     }
 
-    protected function render_design_metabox($post, $default_design) {
+    protected function render_design_metabox($post) {
         $design_meta = get_post_meta($post->ID, '_' . $post->post_type . '_design', true);
         if ($design_meta == '') {
             $design_meta = array();
+        }
+        $designs = $GLOBALS['kt-' . $post->post_type . '-designs'];
+        $default_design = $GLOBALS['kt-' . $post->post_type . '-default-design'];
+        if (!$default_design) {
+            $default_design = first(array_keys($designs));
         }
         $current = $design_meta ? $design_meta['id'] : $default_design;
         if (!key_exists('options', $design_meta)) {
             $design_meta['options'] = array();
         }
         wp_nonce_field('choose_design', '_design_nonce', false);
-        $designs = $GLOBALS['kt-' . $post->post_type . '-designs'];
         foreach ($designs as $design_ID => $setup) {
             $icon_class = ' dashicons-before';
             $icon = '';
@@ -657,7 +563,7 @@ class kt_Photogallery {
         <span class="design-icon' . $icon_class . '"' . $icon_style . '>' . $icon . '</span>
         <span class="design-label">' . esc_html($setup['label']) . '</span>
     </label>';
-            if ($setup['options']) {
+            if (is_callable($setup['options'])) {
                 echo '
     <div class="design-options" id="design-' . $design_ID . '-options">';
                 if (key_exists($design_ID, $design_meta['options'])) {
@@ -682,13 +588,17 @@ class kt_Photogallery {
     }
 
     public function _render_album_thumbnail_metabox($album) {
-        $thumb_ID = get_post_meta($album->ID, '_photoalbum_thumbnail', true);
-        $thumb = wp_get_attachment_image_src($thumb_ID, 'thumbnail');
+        $thumb_ID = $this->get_thumbnail($album->ID, false);
+        $thumb = $this->get_thumbnail_src($album->ID, false);
+        $thumb_html = '';
+        if ($thumb) {
+            $thumb_html = '<img src="' . $thumb[0] . '" width="' . $thumb[1] . '" height="' . $thumb[2] . '" alt title="' . esc_attr(get_the_title($thumb_ID)) . '"/>';
+        }
         wp_nonce_field('choose_thumbnail', '_thumbnail_nonce', false);
         echo '
 <input type="hidden" id="thumbnail_id" name="thumbnail_id" value="' . $thumb_ID . '" />
 <div class="inside-top">
-    <span id="thumbnail_preview" class="kt-thumbnail">' . ($thumb ? '<img src="' . $thumb[0] . '" width="' . $thumb[1] . '" height="' . $thumb[2] . '" alt title="' . esc_attr(get_the_title($thumb_ID)) . '"/>' : '') . '</span>
+    <span id="thumbnail_preview" class="kt-thumbnail">' . $thumb_html . '</span>
 </div>
 <div class="inside-bottom">
     <a id="clear_thumbnail">' . __('Clear', 'kt-photogallery') . '</a>
@@ -748,7 +658,7 @@ class kt_Photogallery {
                     foreach ($defaults as $default_key => $default_value) {
                         $options[$design_ID][$default_key] = $this->ensure($default_key, null, $default_value);
                     }
-                    if ($setup['filter']) {
+                    if (is_callable($setup['filter'])) {
                         $options[$design_ID] = call_user_func($setup['filter'], $options[$design_ID], $defaults, get_post($post->ID));
                     }
                 }
@@ -777,41 +687,14 @@ class kt_Photogallery {
         trigger_error('<span style="color: #F00">' . $message . '</span> Error occured in <strong>' . $caller['file'] . '</strong> on line <strong>' . $caller['line'] . '</strong> and triggered', $level);
     }
 
-    public function _deprecated($function, $version, $alternative = null) {
-        $this->_error('<code>' . $function . '</code> is depricated since Photogallery version ' . $version . ' and will be removed soon.' . ($alternative ? ' Consider using <code>Photogallery::' . $alternative . '</code>.' : ''));
-    }
-
-    protected function register_default_designs() {
-        $this->register_album_design('list', array(
-            'label' => __('List', 'kt-photogallery'),
-            'title' => __('Lists all images next to their title, name of author and date of publication', 'kt-photogallery'),
-            'render' => array($this, 'render_default_album_list'),
-            'icon' => 'dashicons-list-view'
-        ));
-        $this->register_album_design('grid', array(
-            'label' => __('Grid', 'kt-photogallery'),
-            'title' => __('Arranges all images inside a grid using all available width', 'kt-photogallery'),
-            'render' => array($this, 'render_default_album_grid'),
-            'icon' => 'dashicons-grid-view'
-        ));
-        $this->register_gallery_design('list', array(
-            'label' => __('List', 'kt-photogallery'),
-            'title' => __('List all albums thumbnails next-to their title, image count, name of author and date of publication', 'kt-photogallery'),
-            'render' => array($this, 'render_default_gallery_list'),
-            'icon' => 'dashicons-list-view'
-        ));
-        $this->register_gallery_design('grid', array(
-            'label' => __('Grid', 'kt-photogallery'),
-            'title' => __('Arranges all albums thumbnails inside a grid using all available width', 'kt-photogallery'),
-            'render' => array($this, 'render_default_gallery_grid'),
-            'icon' => 'dashicons-grid-view'
-        ));
+    static function _deprecated($function, $version, $alternative = null) {
+        $this->_error('<code>' . $function . '</code> is deprecated since Photogallery version ' . $version . ' and will be removed soon.' . ($alternative ? ' Consider using <code>Photogallery::' . $alternative . '</code>.' : ''));
     }
 
     /**
      * Registers a custom design for albums. The design will be available in the Album Design metabox during editing
      * @param string $id Unique identifier
-     * @param array $options An associative array:<ul>
+     * @param callable|array $options A callback rendering the design on the frontend or an associative array:<ul>
      * <li><b>label</b> - The text for the label</li>
      * <li><b>icon</b> - The image shown next to the label</li>
      * <li><b>title</b> - Text used inside the HTML title tag, usually containing a description</li>
@@ -821,14 +704,14 @@ class kt_Photogallery {
      * <li><b>filter ($current_options, $defaults, $post)</b> - Callback for filtering the options before they are saved</li><ul>
      * @return bool Returns <code>true</code> if the design successfuly registered and <code>false</code> on failure
      */
-    public function register_album_design($id, $options = null) {
+    public function register_album_design($id, $options) {
         return $this->register_design('photoalbum', $id, $options);
     }
 
     /**
      * Registers a custom design for galleries. The design will be available in the Gallery Design metabox during editing
      * @param string $id Unique identifier
-     * @param array $options An associative array:<ul>
+     * @param callable|array $options A callback rendering the design on the frontend or an associative array:<ul>
      * <li><b>label</b> - The text for the label</li>
      * <li><b>icon</b> - The image shown next to the label</li>
      * <li><b>title</b> - Text used inside the HTML title tag, usually containing a description</li>
@@ -838,149 +721,44 @@ class kt_Photogallery {
      * <li><b>filter ($current_options, $defaults, $post)</b> - Callback for filtering the options before they are saved</li><ul>
      * @return bool Returns <code>true</code> if the design successfuly registered and <code>false</code> on failure
      */
-    public function register_gallery_design($id, $options = null) {
+    public function register_gallery_design($id, $options) {
         return $this->register_design('photogallery', $id, $options);
     }
 
     protected function register_design($post_type, $id, $options) {
         $_id = sanitize_key($id);
-        if ($_id == '' || !is_array($options) || !$options['render']) {
+        if ($_id == '') {
+            return false;
+        }
+        if (is_callable($options)) {
+            $options = array(
+                'render' => $options
+            );
+        }
+        if (!is_array($options) || !is_callable($options['render'])) {
             return false;
         }
         $setup = wp_parse_args($options, array(
             'label' => '',
-            'render' => null,
             'icon' => 'dashicons-admin-appearance',
             'title' => '',
             'options' => null,
             'defaults' => array(),
             'filter' => null
         ));
-        if (!$setup['options']) {
+        if (empty($setup['label'])) {
+            $setup['label'] = $_id;
+        }
+        if (!is_callable($setup['options'])) {
             $setup['defaults'] = array();
             $setup['filter'] = null;
         }
-        $stash = 'kt-' . $post_type . '-designs';
-        if (!key_exists($stash, $GLOBALS)) {
-            $GLOBALS[$stash] = array();
-        }
-        $GLOBALS[$stash][$_id] = $setup;
+        $GLOBALS['kt-' . $post_type . '-designs'][$_id] = $setup;
         return true;
     }
 
-    protected function render_default_gallery_list($gallery) {
-        $album_IDs = $this->get_albums($gallery->ID);
-        if ($album_IDs) {
-            echo '
-    <section id="photogallery-' . $gallery->ID . '" class="photogallery photogallery-list">';
-            foreach ($album_IDs as $album_ID) {
-                $album = get_post($album_ID);
-                if ($album && !in_array($album->post_status, array('draft', 'future', 'private')) && empty($album->password)) {
-                    $permalink = get_permalink($album_ID);
-                    $image_count = $this->get_image_count($album_ID);
-                    if ($image_count) {
-                        $count_str = sprintf(_n('%d Image', '%d Images', $image_count, 'kt-photogallery'), $image_count);
-                    } else {
-                        $count_str = __('0 Images', 'kt-photogallery');
-                    }
-                    $thumb = $this->get_thumbnail_src($album_ID);
-                    $author = get_the_author_meta('display_name', $album->post_author);
-                    $date = get_the_date(null, $album);
-                    echo '
-        <figure id="photoalbum-' . $album_ID . '" class="photogallery-list-item">
-            <a href="' . $permalink . '" class="album-thumbnail">' . ($thumb ? '
-                <img src="' . $thumb[0] . '" width="' . $thumb[1] . '" height="' . $thumb[2] . '" />' : '') . '</a>
-            <aside class="album-details">
-                <a href="' . $permalink . '">' . esc_html($album->post_title) . '</a>
-                <span class="album-author">' . esc_html($author) . '</span>
-                <span class="image-count">' . esc_html($count_str) . '</span>
-                <span class="album-date">' . esc_html($date) . '</span>
-            </aside>
-        </figure>';
-                }
-            }
-            echo '
-    </section>';
-        }
-    }
-
-    protected function render_default_gallery_grid($gallery) {
-        $album_IDs = $this->get_albums($gallery->ID);
-        if ($album_IDs) {
-            echo '
-    <section id="photogallery-' . $gallery->ID . '" class="photogallery photogallery-grid">';
-            foreach ($album_IDs as $album_ID) {
-                $album = get_post($album_ID);
-                if ($album && !in_array($album->post_status, array('draft', 'future', 'private')) && empty($album->password)) {
-                    $permalink = get_permalink($album_ID);
-                    $thumb = $this->get_thumbnail_src($album_ID);
-                    echo '
-        <figure id="photogalbum-' . $album_ID . '" class="photogallery-grid-item">
-            <a href="' . $permalink . '" class="album-thumbnail">' . ($thumb ? '
-                <img src="' . $thumb[0] . '" width="' . $thumb[1] . '" height="' . $thumb[2] . '" />' : '') . '</a>
-        </figure>';
-                }
-            }
-            echo '
-    </section>';
-        }
-    }
-
-    protected function render_default_album_list($album) {
-        $image_IDs = $this->get_images($album->ID);
-        if ($image_IDs) {
-            echo '
-    <section id="photoalbum-' . $album->ID . '" class="photoalbum photoalbum-list">';
-            foreach ($image_IDs as $image_ID) {
-                $image = get_post($image_ID);
-                if ($image) {
-                    $permalink = get_permalink($image_ID);
-                    $thumb = wp_get_attachment_image_src($image_ID, 'thumbnail');
-                    $author = get_the_author_meta('display_name', $image->post_author);
-                    $date = get_the_date(null, $image);
-                    echo '
-        <figure id="photoalbum-image-' . $image_ID . '" class="photoalbum-list-item">
-            <a href="' . $permalink . '" class="image-thumbnail">
-                <img src="' . $thumb[0] . '" width="' . $thumb[1] . '" height="' . $thumb[2] . '" />
-            </a>
-            <aside class="album-details">
-                <a href="' . $permalink . '">' . esc_html($image->post_title) . '</a>
-                <span class="album-author">' . esc_html($author) . '</span>
-                <span class="album-date">' . esc_html($date) . '</span>
-            </aside>
-        </figure>';
-                }
-            }
-            echo '
-    </section>';
-        }
-    }
-
-    protected function render_default_album_grid($album) {
-        $image_IDs = $this->get_images($album->ID);
-        if ($image_IDs) {
-            echo '
-    <section id="photoalbum-' . $album->ID . '" class="photoalbum photoalbum-grid">';
-            foreach ($image_IDs as $image_ID) {
-                $image = get_post($image_ID);
-                if ($image) {
-                    $permalink = get_permalink($image_ID);
-                    $thumb = wp_get_attachment_image_src($image_ID, 'thumbnail');
-                    echo '
-        <figure id="photoalbum-image-' . $image_ID . '" class="photoalbum-grid-item">
-            <a href="' . $permalink . '" class="image-thumbnail">
-                <img src="' . $thumb[0] . '" width="' . $thumb[1] . '" height="' . $thumb[2] . '" />
-            </a>
-        </figure>';
-                }
-            }
-            echo '
-    </section>';
-        }
-    }
-
     /**
-     * Renders the chosen design for a gallery or an album depending on the current post type.
+     * Renders the chosen design for the current gallery or album.
      */
     public function render() {
         if (!is_admin()) {
@@ -988,12 +766,14 @@ class kt_Photogallery {
             if ($post && in_array($post->post_type, array('photogallery', 'photoalbum'))) {
                 $design_meta = get_post_meta($post->ID, '_' . $post->post_type . '_design', true);
                 $design_ID = $design_meta['id'];
-                $render = $GLOBALS['kt-' . $post->post_type . '-designs'][$design_ID]['render'];
-                $options = array();
-                if (key_exists($design_ID, $design_meta['options'])) {
-                    $options = $design_meta['options'][$design_ID];
+                if (key_exists($design_ID, $GLOBALS['kt-' . $post->post_type . '-designs'])) {
+                    $render = $GLOBALS['kt-' . $post->post_type . '-designs'][$design_ID]['render'];
+                    $options = array();
+                    if (key_exists($design_ID, $design_meta['options'])) {
+                        $options = $design_meta['options'][$design_ID];
+                    }
+                    call_user_func($render, $post, $options);
                 }
-                call_user_func($render, $post, $options);
             }
         }
     }
@@ -1001,21 +781,38 @@ class kt_Photogallery {
     protected function get_meta($ID, $key) {
         $post = get_post($ID);
         if ($post) {
-            $meta = get_post_meta($ID, $key, true);
+            $meta = get_post_meta($post->ID, $key, true);
             if ($meta) {
-                return explode(',', $meta);
+                return array_map('intval', explode(',', $meta));
             }
         }
         return false;
     }
 
     /**
-     * Returns an array containing the IDs of albums associated with an gallery.
+     * Returns an array containing the IDs of albums associated with a gallery.
      * @param int $gallery_ID Gallery ID
      * @return bool|array Returns the IDs or false if the gallery could not be found
      */
     public function get_albums($gallery_ID = null) {
-        return $this->get_meta($gallery_ID, '_photogallery_albums');
+        $album_IDs = $this->get_meta($gallery_ID, '_photogallery_albums');
+        if ($album_IDs) {
+            $IDs = array();
+            foreach ($album_IDs as $album_ID) {
+                $album = get_post($album_ID);
+                if ($album && $album->post_type == 'photoalbum') {
+                    if (
+                            $album->post_status == 'publish' ||
+                            (in_array($album->post_status, array('draft', 'pending', 'future')) && is_admin()) ||
+                            ($album->post_status == 'private' && is_user_logged_in())
+                    ) {
+                        $IDs[] = $album->ID;
+                    }
+                }
+            }
+            return $IDs;
+        }
+        return false;
     }
 
     /**
@@ -1060,21 +857,23 @@ class kt_Photogallery {
      * @return bool|int Returns the ID of the thumbnail, or false if no thumbnail or images are available or the album does not exist
      */
     public function get_thumbnail($album_ID = null, $fallback = true) {
-        $thumbnail_ID = false;
         $album = get_post($album_ID);
         if ($album) {
             $thumbnail_ID = get_post_meta($album_ID, '_photoalbum_thumbnail', true);
             if (!$thumbnail_ID && $fallback) {
                 $image_IDs = $this->get_images($album_ID);
-                if($image_IDs){
-                    $thumbnail_ID = $image_IDs[0];
+                if ($image_IDs) {
+                    $i = 0;
+                    $l = count($image_IDs);
+                    do {
+                        $image = get_post($image_IDs[$i]);
+                    } while (++$i < $l && !$image);
+                    $thumbnail_ID = $image ? $image->ID : false;
                 }
             }
-            if(!$thumbnail_ID){
-                $thumbnail_ID = false;
-            }
+            return $thumbnail_ID ? intval($thumbnail_ID) : false;
         }
-        return $thumbnail_ID;
+        return false;
     }
 
     /**
@@ -1104,8 +903,7 @@ class kt_Photogallery {
  * @deprecated since version 1.0
  */
 function get_photogallery($ID = null) {
-    global $kt_Photogallery;
-    $kt_Photogallery->_deprecated(__FUNCTION__, '1.0', 'get_albums');
+    kt_Photogallery::_deprecated(__FUNCTION__, '1.0', 'get_albums');
     global $wpdb;
     if (empty($ID)) {
         global $wp_query;
@@ -1130,8 +928,7 @@ function get_photogallery($ID = null) {
  * @deprecated since version 1.0
  */
 function get_photoalbum($ID = null) {
-    global $kt_Photogallery;
-    $kt_Photogallery->_deprecated(__FUNCTION__, '1.0', 'get_images');
+    kt_Photogallery::_deprecated(__FUNCTION__, '1.0', 'get_images');
     global $wpdb;
     if (empty($ID)) {
         global $wp_query;
@@ -1141,7 +938,7 @@ function get_photoalbum($ID = null) {
             return false;
         }
     }
-    $album = $wpdb->get_row($wpdb->prepare("SELECT `ID`, `post_title` AS `title`, `post_author` AS `author`, `post_date` AS `date`, `post_date_gmt` AS `post_gmt`, `post_modified` AS `modified`, `post_modified_gmt` AS `modified_gmt`, `post_status` AS `status` FROM `" . $wpdb->prefix . "posts` WHERE `ID` = %d AND `post_type` = 'photogallery_album'", $ID));
+    $album = $wpdb->get_row($wpdb->prepare("SELECT `ID`, `post_title` AS `title`, `post_author` AS `author`, `post_date` AS `date`, `post_date_gmt` AS `post_gmt`, `post_modified` AS `modified`, `post_modified_gmt` AS `modified_gmt`, `post_status` AS `status` FROM `" . $wpdb->prefix . "posts` WHERE `ID` = %d AND `post_type` = 'photoalbum'", $ID));
     if ($album) {
         $album->thumbnail = array();
         $thumbnail_ID = get_post_meta($album->ID, '_photoalbum_thumbnail', true);
