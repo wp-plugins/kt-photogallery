@@ -27,11 +27,13 @@ You have to write post type template files for your theme in order for an album 
 This gives Theme developers the most control over a frontend presentation and users a convenient way to create galleries through the WordPress dashboard.
 If you install this plugin, create albums and galleries and include them into your theme's menu, you will be disappointed, since nothing will happen.
 
-1. Create two php files inside your theme's directory: `single-photogallery.php` and `single-photoalbum.php`. `single-photogallery.php` gets called everytime a post with post type `photogallery` is about to be viewed and `single-photoalbum.php` for posts with post type `photoalbum`.  
+1. Create two php files inside your theme's directory: `single-photogallery.php` and `single-photoalbum.php`.
+  - `single-photogallery.php` gets called everytime a gallery is about to be viewed
+  - `single-photoalbum.php` gets called everytime a album is about to be viewed
 2. Now you have two options.
-  - You can register a custom design inside your theme's `function.php` via e.g `$kt_Photogallery->register_gallery_design()` and call `$kt_Photogallery->render()` at an appropriated place inside your `single-photogallery.php` or `single-photoalbum.php` to render it depending on the user's choice.
-  - You can ignore the user's choice and fetch albums, images and thumbnail details, and directly render your own HTML.  
-3. Refere to the PHP API section in this readme for further details on how to retrieve album IDs, image IDs and thumbnail details.
+  - You can register a custom design inside your theme's `function.php` via e.g `$kt_Photogallery->register_gallery_design()` and call `$kt_Photogallery->render()` at an appropriated place inside your `single-photogallery.php` to render it depending on the user's choice.
+  - You fetch albums, images and thumbnail details, and render consistent HTML for all albums and galleries.  
+3. Refere to the PHP API section for further details on how to retrieve album IDs, image IDs and thumbnail details.
 
 **Example**
 
