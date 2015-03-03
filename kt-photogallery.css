@@ -9,13 +9,17 @@
 .ui-selected .album_title {
   color: #0074A2 !important; }
 
-.kt-grid .ui-sorting {
+.kt-grid.ui-sorting .ui-selected {
   margin: 7px;
   border: 3px dashed #E5E5E5 !important;
   box-shadow: none !important; }
 
-.kt-grid .ui-sorting * {
+.kt-grid.ui-sorting .ui-selected * {
   visibility: hidden; }
+
+.kt-grid.ui-sorting,
+.kt-grid.ui-sorting * {
+  cursor: move !important; }
 
 .ui-marquee {
   position: absolute;
@@ -23,8 +27,8 @@
   border: 1px dotted #0074A2;
   background-color: rgba(0, 116, 162, 0.25); }
 
-body.ui-selecting .kt-grid,
-body.ui-selecting .kt-grid * {
+.kt-grid.ui-selecting,
+.kt-grid.ui-selecting * {
   cursor: crosshair !important; }
 
 .ui-sort-helper {
@@ -50,7 +54,7 @@ body.ui-selecting .kt-grid * {
 .ui-sort-helper img + img + img {
   left: 20px;
   top: 8px;
-  opacity: .7;
+  opacity: .4;
   z-index: 1; }
 
 /* WP_List_Table  */
@@ -269,6 +273,7 @@ body.ui-selecting .kt-grid * {
 #album_design .inside,
 #gallery_design .inside {
   display: inline-block;
+  box-sizing: border-box;
   padding: 10px 15px;
   margin: 0;
   width: 100%; }

@@ -22,13 +22,17 @@ $the_blue: #0074A2;
 .ui-selected .album_title {
     color: $the_blue !important;
 }
-.kt-grid .ui-sorting {
+.kt-grid.ui-sorting .ui-selected {
     margin: 7px;
     border: 3px dashed $border_color !important;
     box-shadow: none !important;
 }
-.kt-grid .ui-sorting * {
+.kt-grid.ui-sorting .ui-selected * {
     visibility: hidden;
+}
+.kt-grid.ui-sorting,
+.kt-grid.ui-sorting * {
+    cursor: move !important;
 }
 .ui-marquee {
     position: absolute;
@@ -36,8 +40,8 @@ $the_blue: #0074A2;
     border: 1px dotted $the_blue;
     background-color: fade-out($the_blue, .75);
 }
-body.ui-selecting .kt-grid,
-body.ui-selecting .kt-grid * {
+.kt-grid.ui-selecting,
+.kt-grid.ui-selecting * {
     cursor: crosshair !important;
 }
 .ui-sort-helper {
@@ -63,7 +67,7 @@ body.ui-selecting .kt-grid * {
 .ui-sort-helper img + img + img {
     left: 20px;
     top: 8px;
-    opacity: .7;
+    opacity: .4;
     z-index: 1;
 }
 
@@ -292,6 +296,7 @@ body.ui-selecting .kt-grid * {
 #album_design .inside,
 #gallery_design .inside {
     display: inline-block;
+    box-sizing: border-box;
     padding: 10px 15px;
     margin: 0;
     width: 100%;
