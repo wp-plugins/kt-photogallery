@@ -18,7 +18,7 @@ $kt_Photogallery = new kt_Photogallery();
 class kt_Photogallery {
 
     const VERSION = '1.1';
-    const SELECTSORT = '1.2';
+    const SORTSELECT = '1.2';
 
     protected $dir;
     protected $url;
@@ -151,7 +151,7 @@ class kt_Photogallery {
         $post_type = get_post_type();
         if (in_array($post_type, array('photogallery', 'photoalbum'))) {
             wp_enqueue_style('kt-photogallery', $this->url . '/kt-photogallery.css', null, self::VERSION);
-            wp_enqueue_script('selectsort', $this->url . '/selectsort-' . self::SELECTSORT . '.js', array('jquery'), self::SELECTSORT);
+            wp_enqueue_script('selectsort', $this->url . '/sortselect-' . self::SORTSELECT . '.js', array('jquery'), self::SORTSELECT);
             wp_enqueue_script('kt-photogallery', $this->url . '/kt-photogallery.js', array('selectsort'), self::VERSION);
             if ($post_type == 'photogallery') {
                 wp_enqueue_script('jquery-ui-dialog');

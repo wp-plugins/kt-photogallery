@@ -1,12 +1,12 @@
 /*
- * SelectSort 1.2
- * by Daniel Schneider - https://profiles.wordpress.org/kungtiger
+ * SortSelect 1.2
+ * by Daniel Schneider - https://github.com/kungtiger/SortSelect
  *
  * Released under GPLv2 or later
  * http://www.gnu.org/licenses/gpl-2.0.html
  */
 
-window.SelectSort = (function ($) {
+window.SortSelect = (function ($) {
     var limit = function (min, x, max) {
         return Math.max(min, Math.min(x, max));
     };
@@ -17,8 +17,8 @@ window.SelectSort = (function ($) {
         return String(string).replace(/^\s+|\s+$/, '').split(/\s+/);
     };
     var Instances = [ ];
-    var SelectSort = function (target, init) {
-        var O = SelectSort.get(target);
+    var SortSelect = function (target, init) {
+        var O = SortSelect.get(target);
         if (O !== null) {
             return O;
         }
@@ -100,9 +100,9 @@ window.SelectSort = (function ($) {
                 $grid.off('mousedown', deselect);
                 $grid.off('mousemove', O.filter, sort);
                 $grid.off('mouseup', select);
-                $grid.removeClass(SelectSort.selecting);
-                $grid.removeClass(SelectSort.sorting);
-                children().removeClass(SelectSort.selected).removeClass(SelectSort.sorting);
+                $grid.removeClass(SortSelect.selecting);
+                $grid.removeClass(SortSelect.sorting);
+                children().removeClass(SortSelect.selected).removeClass(SortSelect.sorting);
                 $marquee.remove();
                 if ($helper) {
                     $helper.remove();
@@ -114,10 +114,10 @@ window.SelectSort = (function ($) {
                 }
                 delete O;
             }
-        }, SelectSort.fn, init);
+        }, SortSelect.fn, init);
         var $document = $(document);
         var $current, $selection, $helper;
-        var $marquee = $('<div class="' + SelectSort.marquee + '"/>');
+        var $marquee = $('<div class="' + SortSelect.marquee + '"/>');
         var a, offsetX, offsetY, x0, y0, width, height, Cache;
         var deselectable = true;
         var beyond = false;
@@ -127,7 +127,7 @@ window.SelectSort = (function ($) {
             return $grid.children(O.filter);
         };
         var selection = function () {
-            return children().filter('.' + SelectSort.selected);
+            return children().filter('.' + SortSelect.selected);
         };
         var the = function (mixed) {
             if (mixed) {
@@ -147,27 +147,27 @@ window.SelectSort = (function ($) {
             if (e.jquery) {
                 if (e.length) {
                     if (O.multiple) {
-                        e.addClass(SelectSort.selected);
+                        e.addClass(SortSelect.selected);
                     } else {
-                        children().removeClass(SelectSort.selected);
-                        e.first().addClass(SelectSort.selected);
+                        children().removeClass(SortSelect.selected);
+                        e.first().addClass(SortSelect.selected);
                     }
                 } else {
                     return;
                 }
             } else if (!O.multiple) {
-                children().removeClass(SelectSort.selected);
-                $current.addClass(SelectSort.selected);
+                children().removeClass(SortSelect.selected);
+                $current.addClass(SortSelect.selected);
             } else if (e.ctrlKey || e.metaKey) {
-                $current.toggleClass(SelectSort.selected);
+                $current.toggleClass(SortSelect.selected);
             } else {
                 var $children = children();
-                $children.removeClass(SelectSort.selected);
+                $children.removeClass(SortSelect.selected);
                 if (e.shiftKey && null !== a) {
                     var b = $current.index();
-                    $children.slice(Math.min(a, b), Math.max(a, b) + 1).addClass(SelectSort.selected);
+                    $children.slice(Math.min(a, b), Math.max(a, b) + 1).addClass(SortSelect.selected);
                 } else {
-                    $current.addClass(SelectSort.selected);
+                    $current.addClass(SortSelect.selected);
                 }
             }
             dispatch();
@@ -177,14 +177,14 @@ window.SelectSort = (function ($) {
             if (e.jquery) {
                 all = e.length == 0;
                 if (!all) {
-                    e.removeClass(SelectSort.selected);
+                    e.removeClass(SortSelect.selected);
                     dispatch();
                 }
             } else {
                 all = (e.target == grid || $(e.target).closest(grid).length == 0) && !ctrl(e);
             }
             if (all) {
-                children().removeClass(SelectSort.selected);
+                children().removeClass(SortSelect.selected);
                 $grid.off('mousedown', deselect);
                 deselectable = true;
                 O.trigger('deselect');
@@ -225,7 +225,7 @@ window.SelectSort = (function ($) {
                     if (!e.shiftKey) {
                         a = $current.index();
                     }
-                    if ($current.hasClass(SelectSort.selected)) {
+                    if ($current.hasClass(SortSelect.selected)) {
                         $grid.one('mouseup', select);
                     } else {
                         select(e);
@@ -268,7 +268,7 @@ window.SelectSort = (function ($) {
                     y: position.top + paddingY,
                     w: $this.outerWidth(),
                     h: $this.outerHeight(),
-                    s: $this.hasClass(SelectSort.selected)
+                    s: $this.hasClass(SortSelect.selected)
                 };
             }).get();
             width = $grid.innerWidth();
@@ -278,7 +278,7 @@ window.SelectSort = (function ($) {
                 height: '0px'
             });
             $grid.append($marquee);
-            $grid.addClass(SelectSort.selecting);
+            $grid.addClass(SortSelect.selecting);
             $document.on('mousemove', marquee);
             O.trigger('start');
         };
@@ -291,7 +291,7 @@ window.SelectSort = (function ($) {
                     w: $this.outerWidth() / 2
                 };
             }).get();
-            $grid.addClass(SelectSort.sorting);
+            $grid.addClass(SortSelect.sorting);
             $grid.off('mouseup', select);
             $grid.on('mousemove', O.filter, sort);
             if (O.helper) {
@@ -324,9 +324,9 @@ window.SelectSort = (function ($) {
                 height: h + 'px'
             });
             $.each(Cache, function (i, c) {
-                c.$.toggleClass(SelectSort.selected, c.s);
+                c.$.toggleClass(SortSelect.selected, c.s);
                 if (!(c.x + c.w < x || x + w < c.x || c.y + c.h < y || y + h < c.y)) {
-                    c.$.toggleClass(SelectSort.selected, !(ctrl(e) && c.s));
+                    c.$.toggleClass(SortSelect.selected, !(ctrl(e) && c.s));
                 }
             });
             var $selection = selection();
@@ -335,7 +335,7 @@ window.SelectSort = (function ($) {
         var sort = function (e) {
             e.preventDefault();
             var $this = $(this);
-            if (!$this.hasClass(SelectSort.selected)) {
+            if (!$this.hasClass(SortSelect.selected)) {
                 var i = $this.index();
                 $this[(e.pageX - Cache[i].x < Cache[i].w) ? 'before' : 'after']($selection);
                 O.trigger('sorting', $selection);
@@ -351,7 +351,7 @@ window.SelectSort = (function ($) {
             if (!e || e.which == 27) {
                 if (selecting) {
                     $.each(Cache, function () {
-                        this.$.toggleClass(SelectSort.selected, this.s);
+                        this.$.toggleClass(SortSelect.selected, this.s);
                     });
                 } else {
                     $.each(Cache, function () {
@@ -369,7 +369,7 @@ window.SelectSort = (function ($) {
             if (beyond) {
                 $document.off('keydown', cancel);
                 if (selecting) {
-                    $grid.removeClass(SelectSort.selecting);
+                    $grid.removeClass(SortSelect.selecting);
                     $marquee.detach();
                     $document.off('mousemove', marquee);
                     if (e) {
@@ -377,7 +377,7 @@ window.SelectSort = (function ($) {
                         O.trigger('stop');
                     }
                 } else {
-                    $grid.removeClass(SelectSort.sorting);
+                    $grid.removeClass(SortSelect.sorting);
                     $grid.off('mousemove', O.filter, sort);
                     if (O.helper) {
                         $helper.remove();
@@ -405,7 +405,7 @@ window.SelectSort = (function ($) {
         Instances.push(O);
         return O;
     };
-    $.extend(SelectSort, {
+    $.extend(SortSelect, {
         selected: 'ui-selected',
         selecting: 'ui-selecting',
         sorting: 'ui-sorting',
@@ -427,5 +427,5 @@ window.SelectSort = (function ($) {
             return null;
         }
     });
-    return SelectSort;
+    return SortSelect;
 })(jQuery);

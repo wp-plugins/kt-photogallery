@@ -145,35 +145,35 @@ Access all public methods via `$kt_Photogallery`.
 
 - **`$kt_Photogallery->get_album_count ( [$gallery_ID] )`**  
 Returns the number of albums associated with a gallery  
-**Argument** `int|null $gallery_ID` *Optional* - ID of a gallery. Defaults to the current ID if used inside the Loop  
+**Argument** `int`|`null $gallery_ID` *Optional* - ID of a gallery. Defaults to the current ID if used inside the Loop  
 **Returns** `integer`|`boolean` - Returns an integer on success, or `false` if `$gallery_ID` yields no gallery
 
 - **`$kt_Photogallery->get_albums ( [$gallery_ID] )`**  
 Returns an array of album IDs associated with an gallery.  
-**Argument** `int|null $gallery_ID` *Optional* - ID of an album. Defaults to the current ID if used inside the Loop  
+**Argument** `int`|`null $gallery_ID` *Optional* - ID of an album. Defaults to the current ID if used inside the Loop  
 **Returns** `array`|`boolean` - Returns an array of IDs on success, `false` if `$gallery_ID` yields no gallery
 
 - **`$kt_Photogallery->get_image_count ( [$album_ID] )`**  
 Returns the number of images associated with an album  
-**Argument** `int|null $album_ID` *Optional* - ID of an album. Defaults to the current ID if used inside the Loop  
+**Argument** `int`|`null $album_ID` *Optional* - ID of an album. Defaults to the current ID if used inside the Loop  
 **Returns** `integer`|`boolean` - Returns an integer on success, or `false` if `$album_ID` yields no album
 
 - **`$kt_Photogallery->get_images ( [$album_ID] )`**  
 Returns an array of image IDs associated with an album.  
-**Argument** `int|null $album_ID` *Optional* - ID of an album. Defaults to the current ID if used inside the Loop  
+**Argument** `int`|`null $album_ID` *Optional* - ID of an album. Defaults to the current ID if used inside the Loop  
 **Returns** `array`|`boolean` - Returns an array of IDs on success, `false` if `$album_ID` yields no album
 
 - **`$kt_Photogallery->get_thumbnail ( [$album_ID, [$fallback] ] )`**  
 Returns the ID of the image (attachment) used as thumbnail for an album  
-**Argument** `int|null $album_ID` *Optional* - ID of an album. Defaults to the current ID if used inside the Loop  
+**Argument** `int`|`null $album_ID` *Optional* - ID of an album. Defaults to the current ID if used inside the Loop  
 **Argument** `boolean $fallback` *Optional* - if `true` and `$album_ID` yields no album the method returns the ID of the first image associated with the album. Default is `true`  
-**Returns** `integer|false` - Returns an integer on success, `false` if `$album_ID` yields no album, no thumbnail is set or a fallback could not been resolved
+**Returns** `integer`|`false` - Returns an integer on success, `false` if `$album_ID` yields no album, no thumbnail is set or a fallback could not been resolved
 
 - **`$kt_Photogallery->get_thumbnail_src ( [$album_ID, [$fallback] ] )`**  
 Returns an ordered array with values corresponding to the (0) url, (1) width, (2) height and (3) scale of the thumbnail associated with an album.  
-**Argument** `int|null $album_ID` *Optional* - ID of an album. Defaults to the current ID if used inside the Loop  
+**Argument** `int`|`null $album_ID` *Optional* - ID of an album. Defaults to the current ID if used inside the Loop  
 **Argument** `boolean $fallback` *Optional* - if `true` and `$album_ID` yields no album the method returns the ID of the first image associated with the album. Default is `true`  
-**Returns** `array|false` - Returns an array on success, `false` if `$album_ID` yields no album, no thumbnail is set or a fallback could not been resolved
+**Returns** `array`|`false` - Returns an array on success, `false` if `$album_ID` yields no album, no thumbnail is set or a fallback could not been resolved
 
 - **`$kt_Photogallery->register_album_design ( $key, $options )`**
 - **`$kt_Photogallery->register_gallery_design ( $key, $options )`**  
@@ -181,15 +181,15 @@ Registers a custom design for albums and galleries respectively.
 The design will be available in the Design metabox during editing  
 **Returns** `boolean` - returns `true` if the design was registered successfully, `false` on failure.  
   **Argument** `string $key` *Required* - A key used as id inside HTML/CSS and for general identification  
-  **Argument** `callable|array $options` *Required* - A callback rendering the design on the frontend or an associative array:
+  **Argument** `callable`|`array $options` *Required* - A callback rendering the design on the frontend or an associative array:
 
-  - *`string`* `label` - The text for the label
-  - *`string`* `icon` - The image shown next to the label. Can be `dashicons-*`, an URL to an image or a base 64 encoded image
-  - *`string`* `title` - Text used inside the HTML title tag, usually containing a description
-  - *`callback`* `render ($post, $options)` - Callback rendering the design on the frontend. The arguments passed are the current post as a WP_Post instance and an associative array of the options straight from the database
-  - *`callback`* `options ($current_options, $defaults, $post)` - Callback for additional form fields, should echo HTML. The arguments passed are an associative array of the options straight from the database, the default options as second argument and the current post as a WP_Post instance as third.
-  - *`array`* ` defaults` - Associative array containing default values for options. Its keys are used during saving so you should generate HTML form fields using its keys and provide a callback for filtering.
-  - *`callback`* `filter ($current_options, $defaults, $post)` - Callback for filtering the options before they are saved. This callback is called every time a post is saved. The arguments passed are the default options merged with the values from the current request, the default options as second argument and the current post as a WP_Post instance as third. The callback must return an associative array otherwise no options are stored.
+  - `string label` - The text for the label
+  - `string icon` - The image shown next to the label. Can be `dashicons-*`, an URL to an image or a base 64 encoded image
+  - `string title` - Text used inside the HTML title tag, usually containing a description
+  - `callback render ($post, $options)` - Callback rendering the design on the frontend. The arguments passed are the current post as a WP_Post instance and an associative array of the options straight from the database
+  - `callback options ($current_options, $defaults, $post)` - Callback for additional form fields, should echo HTML. The arguments passed are an associative array of the options straight from the database, the default options as second argument and the current post as a WP_Post instance as third.
+  - `array  defaults` - Associative array containing default values for options. Its keys are used during saving so you should generate HTML form fields using its keys and provide a callback for filtering.
+  - `callback filter ($current_options, $defaults, $post)` - Callback for filtering the options before they are saved. This callback is called every time a post is saved. The arguments passed are the default options merged with the values from the current request, the default options as second argument and the current post as a WP_Post instance as third. The callback must return an associative array otherwise no options are stored.
 
 - **`$kt_Photogallery->render`**  
 Main output method. Depending on the current post type the method prints out a design for a gallery or an album.
@@ -229,7 +229,7 @@ You have to write template files for custom post types and add them to your them
 - Fixed `get_albums()`: protected and private albums are now properly included or excluded
 - Fixed `get_meta()`
 - Fixed SQL query inside `get_photoalbum()`
-- Updated SelectSort.js to version 1.2
+- Updated SortSelect.js to version 1.2
 - Merged `gallery.js` and `album.js`
 
 = 1.0.1 =
@@ -242,7 +242,7 @@ You have to write template files for custom post types and add them to your them
 - Improved custom post type integration
 - Added support of custom designs
 - Added API for fetching albums, images and thumbnails
-- Updated SelectSort.js to version 1.1
+- Updated SortSelect.js to version 1.1
 - Deprecated `get_photogallery` and `get_photoalbum`
 
 = 0.9 =
