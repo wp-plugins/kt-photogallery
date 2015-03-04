@@ -69,8 +69,8 @@
 
             // add selected albums to the grid
             buttons[l10n.add] = function () {
-                var $selection = selectsort_Dialog.selection();
-                selectsort_Dialog.deselect();
+                var $selection = sortselect_Dialog.selection();
+                sortselect_Dialog.deselect();
                 $selection.clone().appendTo($Grid);
                 $Dialog.dialog("close");
             };
@@ -155,7 +155,7 @@
         // remove button
         var $Remove = $('#remove');
         $Remove.on('click', function () {
-            selectsort_Grid.selection().remove();
+            sortselect_Grid.selection().remove();
             $Wrap.removeClass('removeable');
         });
 
@@ -170,24 +170,24 @@
 
         // init SelectSort for jQuery UI Dialog
         if (type == 'photogallery') {
-            var selectsort_Dialog = SelectSort($Dialog, {
+            var sortselect_Dialog = SortSelect($Dialog, {
                 sortable: false,
                 filter: 'figure'
             });
-            selectsort_Dialog.on('change', function ($selection) {
+            sortselect_Dialog.on('change', function ($selection) {
                 $DialogButton.attr('disabled', $selection.length == 0);
             });
         }
 
         // init SelectSort for grid
-        var selectsort_Grid = SelectSort($Grid, {
+        var sortselect_Grid = SortSelect($Grid, {
             filter: 'figure',
             helper: function ($selection) {
                 var $stack = $selection.slice(0, 3).find('img').clone();
                 return $('<div class="ui-sort-helper" />').append($stack);
             }
         });
-        selectsort_Grid.on('change', function ($selection) {
+        sortselect_Grid.on('change', function ($selection) {
             $Wrap.toggleClass('removeable', $selection.length > 0);
             $document[$selection.length ? 'on' : 'off']('keydown', maybeDelete);
         });
