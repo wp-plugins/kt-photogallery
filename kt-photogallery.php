@@ -4,7 +4,7 @@
  * Plugin Name: Photogallery
  * Plugin URI: https://wordpress.org/plugins/kt-photogallery
  * Description: Create photo-galleries with ease.
- * Version: 1.1
+ * Version: 1.2
  * Author: Daniel Schneider
  * Author URI: http://profiles.wordpress.org/kungtiger
  * License: GPL2 or later
@@ -18,7 +18,7 @@ $kt_Photogallery = new kt_Photogallery();
 class kt_Photogallery {
 
     const VERSION = '1.1';
-    const SELECTSORT = '1.2';
+    const SORTSELECT = '1.2';
 
     protected $dir;
     protected $url;
@@ -149,11 +149,16 @@ class kt_Photogallery {
 
     public function _enqueue_scripts() {
         $post_type = get_post_type();
-        if (in_array($post_type, array('photogallery', 'photoalbum'))) {
+        $post_types = array('photogallery', 'photoalbum');
+        if (in_array($post_type, $post_types)) {
             wp_enqueue_style('kt-photogallery', $this->url . '/kt-photogallery.css', null, self::VERSION);
-            wp_enqueue_script('selectsort', $this->url . '/selectsort-' . self::SELECTSORT . '.js', array('jquery'), self::SELECTSORT);
-            wp_enqueue_script('kt-photogallery', $this->url . '/kt-photogallery.js', array('selectsort'), self::VERSION);
-            if ($post_type == 'photogallery') {
+            wp_register_script('selectsort', $this->url . '/sortselect-' . self::SORTSELECT . '.js', array('jquery'), self::SORTSELECT);
+            wp_register_script('kt-photogallery', $this->url . '/kt-photogallery.js', array('selectsort'), self::VERSION);
+            $page = get_current_screen()->id;
+            if (in_array($page, $post_types)) {
+                wp_enqueue_script('kt-photogallery');
+            }
+            if ($page == 'photogallery') {
                 wp_enqueue_script('jquery-ui-dialog');
                 wp_enqueue_style('wp-jquery-ui-dialog');
                 wp_localize_script('kt-photogallery', 'kt_Photogallery_l10n', array(
@@ -162,7 +167,7 @@ class kt_Photogallery {
                     'title' => __('Choose Albums', 'kt-photogallery')
                 ));
             }
-            if ($post_type == 'photoalbum') {
+            if ($page == 'photoalbum') {
                 wp_enqueue_media();
                 wp_localize_script('kt-photogallery', 'kt_Photogallery_l10n', array(
                     'title' => __('Choose Images', 'kt-photogallery'),
@@ -280,12 +285,14 @@ class kt_Photogallery {
 
     public function _add_help_tabs() {
         $screen = get_current_screen();
-        if ($screen->post_type == 'photogallery') {
-            if ($screen->base == 'edit') {
+        $post_type = $screen->post_type;
+        $page = $screen->base;
+        if ($post_type == 'photogallery') {
+            if ($page == 'edit') {
                 $screen->add_help_tab(array(
                     'id' => 'help_general',
                     'title' => __('Overview', 'kt-photogallery'),
-                    'content' => '<p>' . __('On this page you find all your photogalleries. A photogallery consists of albums which themselfs contain images from your Media Manager. If your current theme supports menus you can add photogalleries to it.', 'kt-photogallery') . '</p>'
+                    'content' => '<p>' . __('On this page you find all your galleries. A gallery consists of albums which themself contain images from your Media Manager. If your current theme supports menus you can add gallerys to it.', 'kt-photogallery') . '</p>'
                 ));
                 $screen->add_help_tab(array(
                     'id' => 'help_actions',
@@ -294,8 +301,12 @@ class kt_Photogallery {
 <p>' . __('If you move your mouse over an entry in the list additional options show up:', 'kt-photogallery') . '</p>
 <p>
     <ul>
-        <li><strong>' . __('Edit', 'kt-photogallery') . '</strong> ' . __('will lead you to the page "Edit Photogallery". A simple click on its name will do the same.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Edit', 'kt-photogallery') . '</strong> ' . __('will lead you to the page "Edit Gallery". A simple click on its name will do the same.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Quick Edit', 'kt-photogallery') . '</strong> ' . __("opens a box where you can edit some of a gallery's details.", 'kt-photogallery') . '</li>
         <li><strong>' . __('Delete', 'kt-photogallery') . '</strong> ' . __('will move a gallery to the trash. A trashed gallery can not be viewed on your Wordpress side. You can restore a gallery from the trash or delete it permanently at any time.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('View', 'kt-photogallery') . '</strong> ' . __('lets you view the gallery how it is shown to the public.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Restore', 'kt-photogallery') . '</strong> ' . __('restores a deleted item. It will return to its former state.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Delete Permalently', 'kt-photogallery') . '</strong> ' . __('will delete a gallery permanently. This action can not be undone!', 'kt-photogallery') . '</li>
     </ul>
 </p>'
                 ));
@@ -304,44 +315,57 @@ class kt_Photogallery {
                     'title' => __('Useage', 'kt-photogallery'),
                     'content' => '
 <p>' . __('If your current theme supports menus you can add a gallery to them. Simply click Design > Menus and then choose your gallery from the list on the left.', 'kt-photogallery') . '</p>
-<p>' . __('If you cannot choose a gallery them make sure your checked Galleries in the Screen Options tab.', 'kt-photogallery') . '</p>
-<p>' . __("Depending on your theme's design your gallery will now show up on your Wordpress side.", 'kt-photogallery') . '</p>'
+<p>' . __('If you cannot choose a gallery them make sure your checked Galleries in the Screen Options tab.', 'kt-photogallery') . '</p>'
                 ));
             } else {
                 $screen->add_help_tab(array(
                     'id' => 'help_general',
-                    'title' => __('Name &amp; Permalink', 'kt-photogallery'),
+                    'title' => __('Name &amp; Editor', 'kt-photogallery'),
                     'content' => '
 <p>
     <ul>
-        <li><strong>' . __('Gallery Name', 'kt-photogallery') . '</strong> - ' . __('You have to type a name for your gallery into the text field. Otherwise your gallery will not be available to the public.', 'kt-photogallery') . '</li>
-        <li><strong>' . __('Permalink', 'kt-photogallery') . '</strong> - ' . __('After you have typed in a name for your gallery, its unique permalink will be shown beneath the text field based on the name. A permalink is used inside a link to a gallery and it is unique for one gallery.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Name', 'kt-photogallery') . '</strong> - ' . __("Enter  a name for your gallery. After you entered a name, you'll see the permalink below, which you can edit as well.", 'kt-photogallery') . '</li>
+        <li><strong>' . __('Editor', 'kt-photogallery') . '</strong> - ' . __('Enter the text for your gallery. There are two modes of editing: Visual and Text. Choose the mode by clicking on the appropriate tab.', 'kt-photogallery') . '</li>
+        <li>' . __('Visual mode gives you a WYSIWYG editor. Click the last icon in the row to get a second row of controls.') . '</li>
+        <li>' . __('The Text mode allows you to enter HTML along with your gallery text. Line breaks will be converted to paragraphs automatically.') . '</li>
     </ul>
-</p>
-<p>' . __('You can edit the permalink by clicking on the yellow box at the end of the web-address/URL. When you are done editing the permalink click outside the yellow box or press <code>Enter</code> and wait for the new permalink to be checked. If your choice is unique then it is kept, otherwise the yellow box restores the permalink given by Wordpress.', 'kt-photogallery') . '</p>
-<p>' . __('If you want to cancel your change press <code>Esc</code>.', 'kt-photogallery') . '</p>'
+</p>'
                 ));
                 $screen->add_help_tab(array(
                     'id' => 'help_actions',
-                    'title' => __('Actions', 'kt-photogallery'),
+                    'title' => __('Albums', 'kt-photogallery'),
                     'content' => '
 <p>
     <ul>
-        <li><strong>' . __('Add Album', 'kt-photogallery') . '</strong> - ' . __('Click this button to add albums to the gallery. A dialog will show up where you can choose albums to be added to the gallery. When finished hit OK.', 'kt-photogallery') . '</li>
-        <li><strong>' . __('Remove from Gallery', 'kt-photogallery') . '</strong> - ' . __('After you selected an album this button will show up. Click it to remove albums from this gallery.', 'kt-photogallery') . '</li>
-        <li><strong>' . __('Reorder Albums', 'kt-photogallery') . '</strong> - ' . __('To change the order of your albums simply drag and drop them. Left click on an album, keep the button pressed, move the album to its new location and release the mouse button.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Add', 'kt-photogallery') . '</strong> - ' . __('Click this button to add albums to the gallery. A dialog will show up where you can choose albums to be added to the gallery. When finished click on "Add to Gallery".', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Remove', 'kt-photogallery') . '</strong> - ' . __('After you selected an album this button will show up. Click it to remove albums from this gallery.', 'kt-photogallery') . '</li>
+        <li>' . __('To change the order of your albums simply drag and drop them. Left click on an album, keep the button pressed, move the album to its new location and release the mouse button.', 'kt-photogallery') . '</li>
     </ul>
 </p>
-<p>' . __('If you having trouble rearranging your album try dragging your selection over another album. Try to avoid gaps between albums because only if your mouse pointer is over another album will your selection move to a new location.', 'kt-photogallery') . '</p>
-<p>' . __('Hold down <code>Ctrl</code> or <code>Shift</code>, or use your mouse and draw a frame to select more than one album at a time.', 'kt-photogallery') . '</p>'
+<p>' . __('If you having trouble rearranging an album try dragging your selection over another album. Try to avoid gaps between albums because only if your mouse pointer is over another album will your selection move to a new location.', 'kt-photogallery') . '</p>
+<p><strong>' . __('Tip:', 'kt-photogallery') . '</strong> ' . __('Hold down <code>Ctrl</code> or <code>Shift</code>, or use your mouse and draw a frame to select more than one album at a time.', 'kt-photogallery') . '</p>'
+                ));
+                $screen->add_help_tab(array(
+                    'id' => 'help_design',
+                    'title' => __('Gallery Design', 'kt-photogallery'),
+                    'content' => '
+<p>' . __('If your current theme provides designs for galleries you can choose from them. Some designs offer options you can change for each gallery.', 'kt-photogallery') . '</p>
+<p><strong>' . __('Note:', 'kt-photogallery') . '</strong> ' . __('If the current theme does not provide any design the box for choosing one will be hidden.') . '</p>'
+                ));
+                $screen->add_help_tab(array(
+                    'id' => 'help_publish',
+                    'title' => __('Publish Settings', 'kt-photogallery'),
+                    'content' => '
+<p>' . __('You can set the terms of publishing your gallery in the Publish box. For Status, Visibility, and Publish (immediately), click on the Edit link to reveal more options. Visibility includes options for password-protecting a gallery. Publish (immediately) allows you to set a future or past date and time, so you can schedule a gallery to be published in the future or backdate a gallery.', 'kt-photogallery') . '</p>'
                 ));
             }
+            $this->add_help_sidebox($screen);
         } else if ($screen->post_type == 'photoalbum') {
             if ($screen->base == 'edit') {
                 $screen->add_help_tab(array(
                     'id' => 'help_general',
                     'title' => __('Overview', 'kt-photogallery'),
-                    'content' => '<p>' . __('On this page you find all your photoalbums. An album contains images from the Media Manager.', 'kt-photogallery') . '</p>'
+                    'content' => '<p>' . __('On this page you find all your albums. An album contains images from the Media Manager and you can add albums to galleries.', 'kt-photogallery') . '</p>'
                 ));
                 $screen->add_help_tab(array(
                     'id' => 'help_actions',
@@ -350,48 +374,87 @@ class kt_Photogallery {
 <p>' . __('If you move your mouse over an entry in the list additional options show up:', 'kt-photogallery') . '</p>
 <p>
     <ul>
-        <li><strong>' . __('Edit', 'kt-photogallery') . '</strong> ' . __('will lead you to the page "Edit Photoalbum". A simple click on its name will do the same.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Edit', 'kt-photogallery') . '</strong> ' . __('will lead you to the page "Edit Album". A simple click on its name will do the same.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Quick Edit', 'kt-photogallery') . '</strong> ' . __("opens a box where you can edit some of a gallery's details.", 'kt-photogallery') . '</li>
         <li><strong>' . __('Delete', 'kt-photogallery') . '</strong> ' . __('will move an album to the trash. A trashed album can not be viewed on your Wordpress side. You can restore an album from the trash or delete it permanently at any time.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('View', 'kt-photogallery') . '</strong> ' . __('lets you view the album how it is shown to the public.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Restore', 'kt-photogallery') . '</strong> ' . __('restores a deleted item. It will return to its former state.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Delete Permalently', 'kt-photogallery') . '</strong> ' . __('will delete an album permanently. This action can not be undone!', 'kt-photogallery') . '</li>
     </ul>
 </p>'
                 ));
             } else {
                 $screen->add_help_tab(array(
                     'id' => 'help_general',
-                    'title' => __('Album Name', 'kt-photogallery'),
+                    'title' => __('Name &amp; Editor', 'kt-photogallery'),
                     'content' => '
-<p>' . __('You have to enter a name for your album into the first text field.', 'kt-photogallery') . '</p>
-<p>' . __('Depending on your current theme the album name might actually been used on your Wordpress side.', 'kt-photogallery') . '</p>'
+<p>
+    <ul>
+        <li><strong>' . __('Name', 'kt-photogallery') . '</strong> - ' . __("Enter  a name for your album. After you entered a name, you'll see the permalink below, which you can edit as well.", 'kt-photogallery') . '</li>
+        <li><strong>' . __('Editor', 'kt-photogallery') . '</strong> - ' . __('Enter the text for your album. There are two modes of editing: Visual and Text. Choose the mode by clicking on the appropriate tab.', 'kt-photogallery') . '</li>
+        <li>' . __('Visual mode gives you a WYSIWYG editor. Click the last icon in the row to get a second row of controls.') . '</li>
+        <li>' . __('The Text mode allows you to enter HTML along with your album text. Line breaks will be converted to paragraphs automatically.') . '</li>
+    </ul>
+</p>'
+                ));
+                $screen->add_help_tab(array(
+                    'id' => 'help_actions',
+                    'title' => __('Albums', 'kt-photogallery'),
+                    'content' => '
+<p>
+    <ul>
+        <li><strong>' . __('Add', 'kt-photogallery') . '</strong> - ' . __('Click this button to add images to the album. A dialog will show up where you can choose images to be added to the album. When finished click on "Add to Album".', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Remove', 'kt-photogallery') . '</strong> - ' . __('After you selected an image this button will show up. Click it to remove images from this album.', 'kt-photogallery') . '</li>
+        <li>' . __('To change the order of your images simply drag and drop them. Left click on an image, keep the button pressed, move the image to its new location and release the mouse button.', 'kt-photogallery') . '</li>
+    </ul>
+</p>
+<p>' . __('If you having trouble rearranging an image try dragging your selection over another image. Try to avoid gaps between images because only if your mouse pointer is over another image will your selection move to a new location.', 'kt-photogallery') . '</p>
+<p><strong>' . __('Tip:', 'kt-photogallery') . '</strong> ' . __('Hold down <code>Ctrl</code> or <code>Shift</code>, or use your mouse and draw a frame to select more than one image at a time.', 'kt-photogallery') . '</p>'
+                ));
+                $screen->add_help_tab(array(
+                    'id' => 'help_design',
+                    'title' => __('Album Design', 'kt-photogallery'),
+                    'content' => '
+<p>' . __('If your current theme provides designs for albums you can choose from them. Some designs offer options you can change for each album.', 'kt-photogallery') . '</p>
+<p><strong>' . __('Note:', 'kt-photogallery') . '</strong> ' . __('If the current theme does not provide any design the box for choosing one will be hidden.') . '</p>'
+                ));
+                $screen->add_help_tab(array(
+                    'id' => 'help_publish',
+                    'title' => __('Publish Settings', 'kt-photogallery'),
+                    'content' => '
+<p>' . __('You can set the terms of publishing your album in the Publish box. For Status, Visibility, and Publish (immediately), click on the Edit link to reveal more options. Visibility includes options for password-protecting an album. Publish (immediately) allows you to set a future or past date and time, so you can schedule an album to be published in the future or backdate an album.', 'kt-photogallery') . '</p>'
                 ));
                 $screen->add_help_tab(array(
                     'id' => 'help_thumbnail',
                     'title' => __('Thumbnail', 'kt-photogallery'),
                     'content' => '
-<p>' . __('If you click on the box on the left you can choose a thumbnail for the album.', 'kt-photogallery') . '</p>
-<p>' . __('You can delete a thumbnail by hovering over the box and click on the red button showing up.', 'kt-photogallery') . '</p>
-<p>' . __('If you do not choose an thumbnail but the current theme needs one, Wordpress will choose the first available image inside the album and uses it as thumbnail for the album.', 'kt-photogallery') . '</p>'
-                ));
-                $screen->add_help_tab(array(
-                    'id' => 'help_photo',
-                    'title' => __('Add &amp; Remove Photos', 'kt-photogallery'),
-                    'content' => '
+<p>' . __("You can assign an image to be used as an album's thumbnail. A thumbnail is a image representing the entire album.", 'kt-photogallery') . '</p>
 <p>
     <ul>
-        <li><strong>' . __('Add Photo', 'kt-photogallery') . '</strong> - ' . __('Click this button to add images from the Media Manager to your album.', 'kt-photogallery') . '</li>
-        <li><strong>' . __('Remove from Album', 'kt-photogallery') . '</strong> - ' . __('After you selected one or more albums this button will show up. Click it to delete images from the album. Hold down <code>Ctrl</code> or <code>Shift</code>, or use your mouse and draw a frame to delete multiple images at once.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Choose', 'kt-photogallery') . '</strong> - ' . __('Click this button to choose an image to be the albums\'s thumbnail. A dialog will show up where you can choose an image. When finished click on "Choose as Thumbnail".', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Clear', 'kt-photogallery') . '</strong> - ' . __('Resets you choice.', 'kt-photogallery') . '</li>
     </ul>
-<p>' . __('Images you deleted from this album are still available to other albums, posts and such. To actually delete an image you have to delete it inside the Media Manager.', 'kt-photogallery') . '</p>'
-                ));
-                $screen->add_help_tab(array(
-                    'id' => 'help_order',
-                    'title' => __('Order Photos', 'kt-photogallery'),
-                    'content' => '
-<p>' . __('To change the order of your images simply drag and drop them. Left click on an image, keep the button pressed, move the image to its new location and release the mouse button.', 'kt-photogallery') . '</p>
-<p>' . __('Hold down <code>Ctrl</code> or <code>Shift</code>, or use your mouse and draw a frame to move more than one image at a time.', 'kt-photogallery') . '</p>
-<p>' . __('If you having trouble rearranging your images try dragging your selection over another image. Try to avoid gaps between images because only if your mouse pointer is over another image will your selection move to a new location.', 'kt-photogallery') . '</p>'
+</p>'
                 ));
             }
+            $this->add_help_sidebox($screen);
         }
+    }
+
+    protected function add_help_sidebox($screen) {
+        if ($screen->base == 'edit') {
+            $text = __('Documentation on Managing Posts', 'kt-photogallery');
+            $url = 'http://codex.wordpress.org/Posts_Screen';
+        } else {
+            $text = __('Documentation on Writing and Editing Posts', 'kt-photogallery');
+            $url = 'http://codex.wordpress.org/Posts_Add_New_Screen';
+        }
+        $codex_link = '<a href="' . $url . '" target="_blank">' . $text . '</a>';
+        $screen->set_help_sidebar('
+<p><strong>' . __('For more Information:', 'kt-photogallery') . '</strong></p>
+<p>' . $codex_link . '</p>
+<p><a href="https://wordpress.org/support/plugin/kt-photogallery" target="_blank">' . __('Photogallery Support Forum', 'kt-photogallery') . '</a></p>
+<p><a href="https://wordpress.org/plugins/kt-photogallery/" target="_blank">' . __('API and Examples', 'kt-photogallery') . '</a></p>');
     }
 
     public function _ajax_load_albums() {
@@ -607,45 +670,39 @@ class kt_Photogallery {
     }
 
     public function _save_gallery_metadata($ID) {
-        if ((defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) or ! current_user_can('edit_post')) {
-            return;
-        }
-        $albums_nonce = $this->ensure('_albums_nonce');
-        if ($albums_nonce !== null && wp_verify_nonce($albums_nonce, 'choose_albums')) {
-            $album_IDs = $this->ensure('albums');
-            if ($album_IDs !== null && is_array($album_IDs)) {
-                $album_IDs = array_filter(array_map('intval', $album_IDs));
-                update_post_meta($ID, '_photogallery_albums', implode(',', $album_IDs));
+        if (!(defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) && current_user_can('edit_posts')) {
+            if (wp_verify_nonce($this->ensure('_albums_nonce'), 'choose_albums')) {
+                $album_IDs = $this->ensure('albums');
+                if ($album_IDs !== null && is_array($album_IDs)) {
+                    $album_IDs = array_filter(array_map('intval', $album_IDs));
+                    update_post_meta($ID, '_photogallery_albums', implode(',', $album_IDs));
+                }
             }
+            $this->save_design_metadata(get_post($ID), 'list');
         }
-        $this->save_design_metadata(get_post($ID), 'list');
     }
 
     public function _save_album_metadata($ID) {
-        if ((defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) or ! current_user_can('edit_post')) {
-            return;
-        }
-        $thumbnail_nonce = $this->ensure('_thumbnail_nonce');
-        if ($thumbnail_nonce !== null && wp_verify_nonce($thumbnail_nonce, 'choose_thumbnail')) {
-            $thumb_ID = $this->ensure('thumbnail_id');
-            if ($thumb_ID !== null) {
-                update_post_meta($ID, '_photoalbum_thumbnail', $thumb_ID);
+        if (!(defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) && current_user_can('edit_posts')) {
+            if (wp_verify_nonce($this->ensure('_thumbnail_nonce'), 'choose_thumbnail')) {
+                $thumb_ID = $this->ensure('thumbnail_id');
+                if ($thumb_ID !== null) {
+                    update_post_meta($ID, '_photoalbum_thumbnail', $thumb_ID);
+                }
             }
-        }
-        $images_nonce = $this->ensure('_images_nonce');
-        if ($images_nonce !== null && wp_verify_nonce($images_nonce, 'choose_images')) {
-            $image_IDs = $this->ensure('images');
-            if ($image_IDs !== null && is_array($image_IDs)) {
-                $image_IDs = array_filter(array_map('intval', $image_IDs));
-                update_post_meta($ID, '_photoalbum_images', implode(',', $image_IDs));
+            if (wp_verify_nonce($this->ensure('_images_nonce'), 'choose_images')) {
+                $image_IDs = $this->ensure('images');
+                if ($image_IDs !== null && is_array($image_IDs)) {
+                    $image_IDs = array_filter(array_map('intval', $image_IDs));
+                    update_post_meta($ID, '_photoalbum_images', implode(',', $image_IDs));
+                }
             }
+            $this->save_design_metadata(get_post($ID), 'grid');
         }
-        $this->save_design_metadata(get_post($ID), 'grid');
     }
 
     protected function save_design_metadata($post, $default_design) {
-        $design_nonce = $this->ensure('_design_nonce');
-        if ($design_nonce !== null && wp_verify_nonce($design_nonce, 'choose_design')) {
+        if (wp_verify_nonce($this->ensure('_design_nonce'), 'choose_design')) {
             $stash = 'kt-' . $post->post_type . '-designs';
             $design_IDs = array_keys($GLOBALS[$stash]);
             $chosen_design = $this->ensure('design', $design_IDs, $default_design);
