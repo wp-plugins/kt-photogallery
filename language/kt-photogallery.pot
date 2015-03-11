@@ -52,26 +52,18 @@ msgstr ""
 msgid "Choose as Thumbnail"
 msgstr ""
 
-#: kt-photogallery.php:184 kt-photogallery.php:189
-msgid "Photogalleries"
+#: kt-photogallery.php:184 kt-photogallery.php:187 kt-photogallery.php:189
+msgid "Galleries"
 msgstr ""
 
 #: kt-photogallery.php:185
 msgid "A custom post type for photo galleries"
 msgstr ""
 
-#: kt-photogallery.php:187
-msgid "Galleries"
-msgstr ""
-
-#: kt-photogallery.php:188
-msgid "Gallery"
-msgstr ""
-
-#. #-#-#-#-#  plugin.pot (Photogallery 1.2)  #-#-#-#-#
+#. #-#-#-#-#  plugin.pot ( 1.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
-#: kt-photogallery.php:190
-msgid "Photogallery"
+#: kt-photogallery.php:188 kt-photogallery.php:190
+msgid "Gallery"
 msgstr ""
 
 #: kt-photogallery.php:191
@@ -635,7 +627,7 @@ msgid "https://wordpress.org/plugins/kt-photogallery"
 msgstr ""
 
 #. Description of the plugin/theme
-msgid "Create photo-galleries with ease."
+msgid "Create galleries with ease."
 msgstr ""
 
 #. Author of the plugin/theme

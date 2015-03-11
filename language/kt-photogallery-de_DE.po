@@ -5,15 +5,15 @@ msgstr ""
 "Project-Id-Version: Photogallery 1.2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/kt-photogallery\n"
 "POT-Creation-Date: 2015-03-11 15:39:14+00:00\n"
+"PO-Revision-Date: 2015-03-11 18:54+0100\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2015-03-11 16:56+0100\n"
-"Last-Translator: \n"
-"Language-Team: \n"
 "X-Generator: Poedit 1.7.4\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Language: de_DE\n"
 
 #: kt-photogallery.php:73 kt-photogallery.php:227
 msgid "New Album"
@@ -55,26 +55,18 @@ msgstr "Vorschaubild auswählen"
 msgid "Choose as Thumbnail"
 msgstr "Vorschaubild auswählen"
 
-#: kt-photogallery.php:184 kt-photogallery.php:189
-msgid "Photogalleries"
-msgstr "Bildergallerien"
+#: kt-photogallery.php:184 kt-photogallery.php:187 kt-photogallery.php:189
+msgid "Galleries"
+msgstr "Gallerien"
 
 #: kt-photogallery.php:185
 msgid "A custom post type for photo galleries"
 msgstr "Benutzerdefinierter Beitragstyp für Photogallerien"
 
-#: kt-photogallery.php:187
-msgid "Galleries"
-msgstr "Gallerien"
-
-#: kt-photogallery.php:188
+#. Plugin Name of the plugin/theme
+#: kt-photogallery.php:188 kt-photogallery.php:190
 msgid "Gallery"
 msgstr "Galerie"
-
-#. Plugin Name of the plugin/theme
-#: kt-photogallery.php:190
-msgid "Photogallery"
-msgstr "Photogallerie"
 
 #: kt-photogallery.php:191
 msgid "All Galleries"
@@ -741,8 +733,8 @@ msgid "https://wordpress.org/plugins/kt-photogallery"
 msgstr "https://wordpress.org/plugins/kt-photogallery"
 
 #. Description of the plugin/theme
-msgid "Create photo-galleries with ease."
-msgstr "Erstelle mühelos Photogallerien"
+msgid "Create galleries with ease."
+msgstr "Erstelle mühelos Gallerien"
 
 #. Author of the plugin/theme
 msgid "Daniel Schneider"
@@ -751,3 +743,9 @@ msgstr "Daniel Schneider"
 #. Author URI of the plugin/theme
 msgid "http://profiles.wordpress.org/kungtiger"
 msgstr "http://profiles.wordpress.org/kungtiger"
+
+#~ msgid "Photogalleries"
+#~ msgstr "Bildergallerien"
+
+#~ msgid "Photogallery"
+#~ msgstr "Photogallerie"

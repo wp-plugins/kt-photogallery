@@ -181,13 +181,13 @@ class kt_Photogallery {
 
     public function _register_post_types() {
         register_post_type('photogallery', array(
-            'label' => __('Photogalleries', 'kt-photogallery'),
-            'description' => __('A custom post type for photo galleries', 'kt-photogallery'),
+            'label' => __('Galleries', 'kt-photogallery'),
+            'description' => __('A custom post type for galleries', 'kt-photogallery'),
             'labels' => array(
                 'name' => __('Galleries', 'kt-photogallery'),
                 'singular_name' => __('Gallery', 'kt-photogallery'),
-                'menu_name' => __('Photogalleries', 'kt-photogallery'),
-                'name_menu_bar' => __('Photogallery', 'kt-photogallery'),
+                'menu_name' => __('Galleries', 'kt-photogallery'),
+                'name_menu_bar' => __('Gallery', 'kt-photogallery'),
                 'all_items' => __('All Galleries', 'kt-photogallery'),
                 'add_new' => _x('New Gallery', 'kt-photogallery new gallery', 'kt-photogallery'),
                 'add_new_item' => __('Add New Gallery', 'kt-photogallery'),
@@ -213,8 +213,8 @@ class kt_Photogallery {
             'can_export' => true
         ));
         register_post_type('photoalbum', array(
-            'label' => __('Photoalbums', 'kt-photogallery'),
-            'description' => __('A custom post type for photo albums', 'kt-photogallery'),
+            'label' => __('Albums', 'kt-photogallery'),
+            'description' => __('A custom post type for albums', 'kt-photogallery'),
             'labels' => array(
                 'name' => __('Albums', 'kt-photogallery'),
                 'singular_name' => __('Album', 'kt-photogallery'),
