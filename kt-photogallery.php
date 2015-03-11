@@ -374,12 +374,12 @@ class kt_Photogallery {
 <p>' . __('If you move your mouse over an entry in the list additional options show up:', 'kt-photogallery') . '</p>
 <p>
     <ul>
-        <li><strong>' . __('Edit', 'kt-photogallery') . '</strong> ' . __('will lead you to the page "Edit Gallery". A simple click on its name will do the same.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Edit', 'kt-photogallery') . '</strong> ' . __('will lead you to the page "Edit Album". A simple click on its name will do the same.', 'kt-photogallery') . '</li>
         <li><strong>' . __('Quick Edit', 'kt-photogallery') . '</strong> ' . __("opens a box where you can edit some of a gallery's details.", 'kt-photogallery') . '</li>
-        <li><strong>' . __('Delete', 'kt-photogallery') . '</strong> ' . __('will move a gallery to the trash. A trashed gallery can not be viewed on your Wordpress side. You can restore a gallery from the trash or delete it permanently at any time.', 'kt-photogallery') . '</li>
-        <li><strong>' . __('View', 'kt-photogallery') . '</strong> ' . __('lets you view the gallery how it is shown to the public.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Delete', 'kt-photogallery') . '</strong> ' . __('will move an album to the trash. A trashed album can not be viewed on your Wordpress side. You can restore an album from the trash or delete it permanently at any time.', 'kt-photogallery') . '</li>
+        <li><strong>' . __('View', 'kt-photogallery') . '</strong> ' . __('lets you view the album how it is shown to the public.', 'kt-photogallery') . '</li>
         <li><strong>' . __('Restore', 'kt-photogallery') . '</strong> ' . __('restores a deleted item. It will return to its former state.', 'kt-photogallery') . '</li>
-        <li><strong>' . __('Delete Permalently', 'kt-photogallery') . '</strong> ' . __('will delete a gallery permanently. This action can not be undone!', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Delete Permalently', 'kt-photogallery') . '</strong> ' . __('will delete an album permanently. This action can not be undone!', 'kt-photogallery') . '</li>
     </ul>
 </p>'
                 ));
@@ -403,7 +403,7 @@ class kt_Photogallery {
                     'content' => '
 <p>
     <ul>
-        <li><strong>' . __('Add', 'kt-photogallery') . '</strong> - ' . __('Click this button to add images to the gallery. A dialog will show up where you can choose images to be added to the album. When finished click on "Add to Album".', 'kt-photogallery') . '</li>
+        <li><strong>' . __('Add', 'kt-photogallery') . '</strong> - ' . __('Click this button to add images to the album. A dialog will show up where you can choose images to be added to the album. When finished click on "Add to Album".', 'kt-photogallery') . '</li>
         <li><strong>' . __('Remove', 'kt-photogallery') . '</strong> - ' . __('After you selected an image this button will show up. Click it to remove images from this album.', 'kt-photogallery') . '</li>
         <li>' . __('To change the order of your images simply drag and drop them. Left click on an image, keep the button pressed, move the image to its new location and release the mouse button.', 'kt-photogallery') . '</li>
     </ul>
