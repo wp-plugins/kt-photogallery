@@ -4,7 +4,7 @@
  * Plugin Name: Photogallery
  * Plugin URI: https://wordpress.org/plugins/kt-photogallery
  * Description: Create photo-galleries with ease.
- * Version: 1.2
+ * Version: 1.2.1
  * Author: Daniel Schneider
  * Author URI: http://profiles.wordpress.org/kungtiger
  * License: GPL2 or later
@@ -479,16 +479,16 @@ class kt_Photogallery {
         if ($album) {
             switch ($album->post_status) {
                 case 'future':
-                    $status_str = sprintf(__('Scheduled for %s', 'kt-photogallery'), get_the_date(null, $album));
+                    $status_str = esc_html(sprintf(__('Scheduled for %s', 'kt-photogallery'), get_the_date(null, $album)));
                     break;
                 case 'publish':
-                    $status_str = $album->post_password ? __('Password Protected', 'kt-photogallery') : __('Public', 'kt-photogallery');
+                    $status_str = $album->post_password ? esc_html__('Password Protected', 'kt-photogallery') : esc_html__('Public', 'kt-photogallery');
                     break;
                 case 'draft':
-                    $status_str = '<em>' . __('Draft', 'kt-photogallery') . '</em>';
+                    $status_str = '<em>' .esc_html__('Draft', 'kt-photogallery') . '</em>';
                     break;
                 case 'private':
-                    $status_str = __('Private', 'kt-photogallery');
+                    $status_str = esc_html__('Private', 'kt-photogallery');
                     break;
                 default:
                     # something else is going on, better cancel
@@ -506,19 +506,19 @@ class kt_Photogallery {
             } else {
                 $count_str = __('0 Images', 'kt-photogallery');
             }
-            $title_str = $album->post_title;
+            $title_str = esc_html($album->post_title);
             if (empty($title_str)) {
-                $title_str = '<em>' . __('Unnamed Album', 'kt-photogallery') . '</em>';
+                $title_str = '<em>' . esc_html__('Unnamed Album', 'kt-photogallery') . '</em>';
             }
             $author_str = sprintf(__('By %s', 'kt-photogallery'), get_the_author_meta('display_name', $album->post_author));
             $html = '<figure class="album">
     <input type="hidden" name="albums[]" value="' . $album_ID . '" />
     <span class="kt-thumbnail">' . $thumb_html . '</span>
     <aside>
-        <span class="album_title">' . esc_html($title_str) . '</span>
+        <span class="album_title">' . $title_str. '</span>
         <span class="album_author">' . esc_html($author_str) . '</span>
         <span class="image_count">' . esc_html($count_str) . '</span>
-        <span class="album_status">' . esc_html($status_str) . '</span>
+        <span class="album_status">' . $status_str . '</span>
     </aside>
 </figure>';
         }
@@ -535,7 +535,7 @@ class kt_Photogallery {
             wp_nonce_field('choose_albums', '_albums_nonce', false);
             wp_nonce_field('ajax_load_albums', '_load_albums_nonce', false);
             echo '
-<div id="album_dialog" class="kt-grid"></div>
+<div id="album_dialog" class="kt-grid" data-no-items="' . __('- No Albums -', 'kt-photogallery') . '"></div>
 <div id="album_grid" class="kt-grid" data-no-items="' . __('- No Albums -', 'kt-photogallery') . '">';
             $album_IDs = $this->get_albums($post->ID);
             if ($album_IDs) {

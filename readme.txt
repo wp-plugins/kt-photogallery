@@ -2,7 +2,7 @@
 Contributors: kungtiger
 Requires at least: 4.0
 Tested up to: 4.1.1
-Stable tag: 1.2
+Stable tag: 1.2.1
 Tags: photo, image, picture, gallery, album
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -224,6 +224,11 @@ If you have a question please contact me and we'll see what we can do
 
 == Changelog ==
 
+= 1.2.1 =
+- Fixes some overzealous esc_html
+- Fixes jQuery UI Dialog sizing issue
+- Add a spinning animation to the album dialog while loading
+
 = 1.2 =
 - Fixes a security issue
 - Fixed a JavaScript bug which can break the page
@@ -254,6 +259,9 @@ If you have a question please contact me and we'll see what we can do
 Initial alpha release.
 
 == Upgrade Notice ==
+
+= 1.2.1 =
+- Fixes some styling errors and adds a nice spinner to the album dialog
 
 = 1.2 =
 - Fixes a security issue and a nasty JavaScript bug
