@@ -1,0 +1,647 @@
+# Copyright (C) 2015 Photogallery
+# This file is distributed under the same license as the Photogallery package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Photogallery 1.2\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/support/plugin/kt-photogallery\n"
+"POT-Creation-Date: 2015-03-11 15:39:14+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2015-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: kt-photogallery.php:73 kt-photogallery.php:227
+msgid "New Album"
+msgstr ""
+
+#: kt-photogallery.php:111
+msgid "Image Count"
+msgstr ""
+
+#: kt-photogallery.php:116
+msgid "Album Count"
+msgstr ""
+
+#: kt-photogallery.php:165
+msgid "Add to Gallery"
+msgstr ""
+
+#: kt-photogallery.php:166
+msgid "Close"
+msgstr ""
+
+#: kt-photogallery.php:167
+msgid "Choose Albums"
+msgstr ""
+
+#: kt-photogallery.php:173
+msgid "Choose Images"
+msgstr ""
+
+#: kt-photogallery.php:174
+msgid "Add to Album"
+msgstr ""
+
+#: kt-photogallery.php:175
+msgid "Choose Thumbnail"
+msgstr ""
+
+#: kt-photogallery.php:176
+msgid "Choose as Thumbnail"
+msgstr ""
+
+#: kt-photogallery.php:184 kt-photogallery.php:189
+msgid "Photogalleries"
+msgstr ""
+
+#: kt-photogallery.php:185
+msgid "A custom post type for photo galleries"
+msgstr ""
+
+#: kt-photogallery.php:187
+msgid "Galleries"
+msgstr ""
+
+#: kt-photogallery.php:188
+msgid "Gallery"
+msgstr ""
+
+#. #-#-#-#-#  plugin.pot (Photogallery 1.2)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: kt-photogallery.php:190
+msgid "Photogallery"
+msgstr ""
+
+#: kt-photogallery.php:191
+msgid "All Galleries"
+msgstr ""
+
+#: kt-photogallery.php:192
+msgctxt "kt-photogallery new gallery"
+msgid "New Gallery"
+msgstr ""
+
+#: kt-photogallery.php:193
+msgid "Add New Gallery"
+msgstr ""
+
+#: kt-photogallery.php:194
+msgid "Edit Gallery"
+msgstr ""
+
+#: kt-photogallery.php:195
+msgid "New Gallery"
+msgstr ""
+
+#: kt-photogallery.php:196
+msgid "View Gallery"
+msgstr ""
+
+#: kt-photogallery.php:197
+msgid "Search Galleries"
+msgstr ""
+
+#: kt-photogallery.php:198
+msgid "No galleries found"
+msgstr ""
+
+#: kt-photogallery.php:199
+msgid "No galleries found in Trash"
+msgstr ""
+
+#: kt-photogallery.php:216 kt-photogallery.php:221
+msgid "Photoalbums"
+msgstr ""
+
+#: kt-photogallery.php:217
+msgid "A custom post type for photo albums"
+msgstr ""
+
+#: kt-photogallery.php:219 kt-photogallery.php:336 kt-photogallery.php:402
+#: kt-photogallery.php:575
+msgid "Albums"
+msgstr ""
+
+#: kt-photogallery.php:220
+msgid "Album"
+msgstr ""
+
+#: kt-photogallery.php:222
+msgid "Photoalbum"
+msgstr ""
+
+#: kt-photogallery.php:223
+msgid "All Albums"
+msgstr ""
+
+#: kt-photogallery.php:224
+msgctxt "kt-photogallery new album"
+msgid "New Album"
+msgstr ""
+
+#: kt-photogallery.php:225
+msgid "Add New Album"
+msgstr ""
+
+#: kt-photogallery.php:226
+msgid "Edit Album"
+msgstr ""
+
+#: kt-photogallery.php:228
+msgid "View Album"
+msgstr ""
+
+#: kt-photogallery.php:229
+msgid "Search Albums"
+msgstr ""
+
+#: kt-photogallery.php:230
+msgid "No albums found"
+msgstr ""
+
+#: kt-photogallery.php:231
+msgid "No albums found in Trash"
+msgstr ""
+
+#: kt-photogallery.php:252
+msgid "Album updated."
+msgstr ""
+
+#: kt-photogallery.php:253
+msgid "Album updated"
+msgstr ""
+
+#: kt-photogallery.php:254
+msgid "Album published."
+msgstr ""
+
+#: kt-photogallery.php:255
+msgid "Album saved"
+msgstr ""
+
+#: kt-photogallery.php:256
+msgid "Album submitted."
+msgstr ""
+
+#: kt-photogallery.php:257
+msgid "Album scheduled for: $s."
+msgstr ""
+
+#: kt-photogallery.php:258
+msgid "Album draft updated."
+msgstr ""
+
+#: kt-photogallery.php:259
+msgid "View album"
+msgstr ""
+
+#: kt-photogallery.php:261
+msgid "Gallery updated."
+msgstr ""
+
+#: kt-photogallery.php:262
+msgid "Gallery updated"
+msgstr ""
+
+#: kt-photogallery.php:263
+msgid "Gallery published."
+msgstr ""
+
+#: kt-photogallery.php:264
+msgid "Gallery saved"
+msgstr ""
+
+#: kt-photogallery.php:265
+msgid "Gallery submitted."
+msgstr ""
+
+#: kt-photogallery.php:266
+msgid "Gallery scheduled for: $s."
+msgstr ""
+
+#: kt-photogallery.php:267
+msgid "Gallery draft updated."
+msgstr ""
+
+#: kt-photogallery.php:268
+msgid "View gallery"
+msgstr ""
+
+#: kt-photogallery.php:294 kt-photogallery.php:367
+msgid "Overview"
+msgstr ""
+
+#: kt-photogallery.php:295
+msgid ""
+"On this page you find all your galleries. A gallery consists of albums which "
+"themself contain images from your Media Manager. If your current theme "
+"supports menus you can add gallerys to it."
+msgstr ""
+
+#: kt-photogallery.php:299 kt-photogallery.php:372
+msgid "Actions"
+msgstr ""
+
+#: kt-photogallery.php:301 kt-photogallery.php:374
+msgid ""
+"If you move your mouse over an entry in the list additional options show up:"
+msgstr ""
+
+#: kt-photogallery.php:304 kt-photogallery.php:377
+msgid "Edit"
+msgstr ""
+
+#: kt-photogallery.php:304
+msgid ""
+"will lead you to the page \"Edit Gallery\". A simple click on its name will "
+"do the same."
+msgstr ""
+
+#: kt-photogallery.php:305 kt-photogallery.php:378
+msgid "Quick Edit"
+msgstr ""
+
+#: kt-photogallery.php:305 kt-photogallery.php:378
+msgid "opens a box where you can edit some of a gallery's details."
+msgstr ""
+
+#: kt-photogallery.php:306 kt-photogallery.php:379
+msgid "Delete"
+msgstr ""
+
+#: kt-photogallery.php:306
+msgid ""
+"will move a gallery to the trash. A trashed gallery can not be viewed on "
+"your Wordpress side. You can restore a gallery from the trash or delete it "
+"permanently at any time."
+msgstr ""
+
+#: kt-photogallery.php:307 kt-photogallery.php:380
+msgid "View"
+msgstr ""
+
+#: kt-photogallery.php:307
+msgid "lets you view the gallery how it is shown to the public."
+msgstr ""
+
+#: kt-photogallery.php:308 kt-photogallery.php:381
+msgid "Restore"
+msgstr ""
+
+#: kt-photogallery.php:308 kt-photogallery.php:381
+msgid "restores a deleted item. It will return to its former state."
+msgstr ""
+
+#: kt-photogallery.php:309 kt-photogallery.php:382
+msgid "Delete Permalently"
+msgstr ""
+
+#: kt-photogallery.php:309
+msgid "will delete a gallery permanently. This action can not be undone!"
+msgstr ""
+
+#: kt-photogallery.php:315
+msgid "Useage"
+msgstr ""
+
+#: kt-photogallery.php:317
+msgid ""
+"If your current theme supports menus you can add a gallery to them. Simply "
+"click Design > Menus and then choose your gallery from the list on the left."
+msgstr ""
+
+#: kt-photogallery.php:318
+msgid ""
+"If you cannot choose a gallery them make sure your checked Galleries in the "
+"Screen Options tab."
+msgstr ""
+
+#: kt-photogallery.php:323 kt-photogallery.php:389
+msgid "Name &amp; Editor"
+msgstr ""
+
+#: kt-photogallery.php:327 kt-photogallery.php:393
+msgid "Name"
+msgstr ""
+
+#: kt-photogallery.php:327
+msgid ""
+"Enter  a name for your gallery. After you entered a name, you'll see the "
+"permalink below, which you can edit as well."
+msgstr ""
+
+#: kt-photogallery.php:328 kt-photogallery.php:394
+msgid "Editor"
+msgstr ""
+
+#: kt-photogallery.php:328
+msgid ""
+"Enter the text for your gallery. There are two modes of editing: Visual and "
+"Text. Choose the mode by clicking on the appropriate tab."
+msgstr ""
+
+#: kt-photogallery.php:329 kt-photogallery.php:395
+msgid ""
+"Visual mode gives you a WYSIWYG editor. Click the last icon in the row to "
+"get a second row of controls."
+msgstr ""
+
+#: kt-photogallery.php:330
+msgid ""
+"The Text mode allows you to enter HTML along with your gallery text. Line "
+"breaks will be converted to paragraphs automatically."
+msgstr ""
+
+#: kt-photogallery.php:340 kt-photogallery.php:406 kt-photogallery.php:531
+msgid "Add"
+msgstr ""
+
+#: kt-photogallery.php:340
+msgid ""
+"Click this button to add albums to the gallery. A dialog will show up where "
+"you can choose albums to be added to the gallery. When finished click on "
+"\"Add to Gallery\"."
+msgstr ""
+
+#: kt-photogallery.php:341 kt-photogallery.php:407 kt-photogallery.php:532
+msgid "Remove"
+msgstr ""
+
+#: kt-photogallery.php:341
+msgid ""
+"After you selected an album this button will show up. Click it to remove "
+"albums from this gallery."
+msgstr ""
+
+#: kt-photogallery.php:342
+msgid ""
+"To change the order of your albums simply drag and drop them. Left click on "
+"an album, keep the button pressed, move the album to its new location and "
+"release the mouse button."
+msgstr ""
+
+#: kt-photogallery.php:345
+msgid ""
+"If you having trouble rearranging an album try dragging your selection over "
+"another album. Try to avoid gaps between albums because only if your mouse "
+"pointer is over another album will your selection move to a new location."
+msgstr ""
+
+#: kt-photogallery.php:346 kt-photogallery.php:412
+msgid "Tip:"
+msgstr ""
+
+#: kt-photogallery.php:346
+msgid ""
+"Hold down <code>Ctrl</code> or <code>Shift</code>, or use your mouse and "
+"draw a frame to select more than one album at a time."
+msgstr ""
+
+#: kt-photogallery.php:350 kt-photogallery.php:577
+msgid "Gallery Design"
+msgstr ""
+
+#: kt-photogallery.php:352
+msgid ""
+"If your current theme provides designs for galleries you can choose from "
+"them. Some designs offer options you can change for each gallery."
+msgstr ""
+
+#: kt-photogallery.php:353 kt-photogallery.php:419
+msgid "Note:"
+msgstr ""
+
+#: kt-photogallery.php:353 kt-photogallery.php:419
+msgid ""
+"If the current theme does not provide any design the box for choosing one "
+"will be hidden."
+msgstr ""
+
+#: kt-photogallery.php:357 kt-photogallery.php:423
+msgid "Publish Settings"
+msgstr ""
+
+#: kt-photogallery.php:359
+msgid ""
+"You can set the terms of publishing your gallery in the Publish box. For "
+"Status, Visibility, and Publish (immediately), click on the Edit link to "
+"reveal more options. Visibility includes options for password-protecting a "
+"gallery. Publish (immediately) allows you to set a future or past date and "
+"time, so you can schedule a gallery to be published in the future or "
+"backdate a gallery."
+msgstr ""
+
+#: kt-photogallery.php:368
+msgid ""
+"On this page you find all your albums. An album contains images from the "
+"Media Manager and you can add albums to galleries."
+msgstr ""
+
+#: kt-photogallery.php:377
+msgid ""
+"will lead you to the page \"Edit Album\". A simple click on its name will do "
+"the same."
+msgstr ""
+
+#: kt-photogallery.php:379
+msgid ""
+"will move an album to the trash. A trashed album can not be viewed on your "
+"Wordpress side. You can restore an album from the trash or delete it "
+"permanently at any time."
+msgstr ""
+
+#: kt-photogallery.php:380
+msgid "lets you view the album how it is shown to the public."
+msgstr ""
+
+#: kt-photogallery.php:382
+msgid "will delete an album permanently. This action can not be undone!"
+msgstr ""
+
+#: kt-photogallery.php:393
+msgid ""
+"Enter  a name for your album. After you entered a name, you'll see the "
+"permalink below, which you can edit as well."
+msgstr ""
+
+#: kt-photogallery.php:394
+msgid ""
+"Enter the text for your album. There are two modes of editing: Visual and "
+"Text. Choose the mode by clicking on the appropriate tab."
+msgstr ""
+
+#: kt-photogallery.php:396
+msgid ""
+"The Text mode allows you to enter HTML along with your album text. Line "
+"breaks will be converted to paragraphs automatically."
+msgstr ""
+
+#: kt-photogallery.php:406
+msgid ""
+"Click this button to add images to the album. A dialog will show up where "
+"you can choose images to be added to the album. When finished click on \"Add "
+"to Album\"."
+msgstr ""
+
+#: kt-photogallery.php:407
+msgid ""
+"After you selected an image this button will show up. Click it to remove "
+"images from this album."
+msgstr ""
+
+#: kt-photogallery.php:408
+msgid ""
+"To change the order of your images simply drag and drop them. Left click on "
+"an image, keep the button pressed, move the image to its new location and "
+"release the mouse button."
+msgstr ""
+
+#: kt-photogallery.php:411
+msgid ""
+"If you having trouble rearranging an image try dragging your selection over "
+"another image. Try to avoid gaps between images because only if your mouse "
+"pointer is over another image will your selection move to a new location."
+msgstr ""
+
+#: kt-photogallery.php:412
+msgid ""
+"Hold down <code>Ctrl</code> or <code>Shift</code>, or use your mouse and "
+"draw a frame to select more than one image at a time."
+msgstr ""
+
+#: kt-photogallery.php:416 kt-photogallery.php:585
+msgid "Album Design"
+msgstr ""
+
+#: kt-photogallery.php:418
+msgid ""
+"If your current theme provides designs for albums you can choose from them. "
+"Some designs offer options you can change for each album."
+msgstr ""
+
+#: kt-photogallery.php:425
+msgid ""
+"You can set the terms of publishing your album in the Publish box. For "
+"Status, Visibility, and Publish (immediately), click on the Edit link to "
+"reveal more options. Visibility includes options for password-protecting an "
+"album. Publish (immediately) allows you to set a future or past date and "
+"time, so you can schedule an album to be published in the future or backdate "
+"an album."
+msgstr ""
+
+#: kt-photogallery.php:429 kt-photogallery.php:583
+msgid "Thumbnail"
+msgstr ""
+
+#: kt-photogallery.php:431
+msgid ""
+"You can assign an image to be used as an album's thumbnail. A thumbnail is a "
+"image representing the entire album."
+msgstr ""
+
+#: kt-photogallery.php:434 kt-photogallery.php:668
+msgid "Choose"
+msgstr ""
+
+#: kt-photogallery.php:434
+msgid ""
+"Click this button to choose an image to be the albums's thumbnail. A dialog "
+"will show up where you can choose an image. When finished click on \"Choose "
+"as Thumbnail\"."
+msgstr ""
+
+#: kt-photogallery.php:435 kt-photogallery.php:667
+msgid "Clear"
+msgstr ""
+
+#: kt-photogallery.php:435
+msgid "Resets you choice."
+msgstr ""
+
+#: kt-photogallery.php:446
+msgid "Documentation on Managing Posts"
+msgstr ""
+
+#: kt-photogallery.php:449
+msgid "Documentation on Writing and Editing Posts"
+msgstr ""
+
+#: kt-photogallery.php:454
+msgid "For more Information:"
+msgstr ""
+
+#: kt-photogallery.php:456
+msgid "Photogallery Support Forum"
+msgstr ""
+
+#: kt-photogallery.php:457
+msgid "API and Examples"
+msgstr ""
+
+#: kt-photogallery.php:482
+msgid "Scheduled for %s"
+msgstr ""
+
+#: kt-photogallery.php:485
+msgid "Password Protected"
+msgstr ""
+
+#: kt-photogallery.php:485
+msgid "Public"
+msgstr ""
+
+#: kt-photogallery.php:488
+msgid "Draft"
+msgstr ""
+
+#: kt-photogallery.php:491
+msgid "Private"
+msgstr ""
+
+#: kt-photogallery.php:505
+msgid "%d Image"
+msgid_plural "%d Images"
+msgstr[0] ""
+msgstr[1] ""
+
+#: kt-photogallery.php:507
+msgid "0 Images"
+msgstr ""
+
+#: kt-photogallery.php:511
+msgid "Unnamed Album"
+msgstr ""
+
+#: kt-photogallery.php:513
+msgid "By %s"
+msgstr ""
+
+#: kt-photogallery.php:539
+msgid "- No Albums -"
+msgstr ""
+
+#: kt-photogallery.php:549
+msgid "- No Images -"
+msgstr ""
+
+#: kt-photogallery.php:582
+msgid "Images"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://wordpress.org/plugins/kt-photogallery"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Create photo-galleries with ease."
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Daniel Schneider"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://profiles.wordpress.org/kungtiger"
+msgstr ""
