@@ -485,7 +485,7 @@ class kt_Photogallery {
                     $status_str = $album->post_password ? esc_html__('Password Protected', 'kt-photogallery') : esc_html__('Public', 'kt-photogallery');
                     break;
                 case 'draft':
-                    $status_str = '<em>' .esc_html__('Draft', 'kt-photogallery') . '</em>';
+                    $status_str = '<em>' . esc_html__('Draft', 'kt-photogallery') . '</em>';
                     break;
                 case 'private':
                     $status_str = esc_html__('Private', 'kt-photogallery');
@@ -515,7 +515,7 @@ class kt_Photogallery {
     <input type="hidden" name="albums[]" value="' . $album_ID . '" />
     <span class="kt-thumbnail">' . $thumb_html . '</span>
     <aside>
-        <span class="album_title">' . $title_str. '</span>
+        <span class="album_title">' . $title_str . '</span>
         <span class="album_author">' . esc_html($author_str) . '</span>
         <span class="image_count">' . esc_html($count_str) . '</span>
         <span class="album_status">' . $status_str . '</span>
@@ -816,23 +816,34 @@ class kt_Photogallery {
 
     /**
      * Renders the chosen design for the current gallery or album.
+     * @param boolean $auto_design [optional] If set true and no design is found, take the first registered one and proceed. Default is true
+     * @return boolean Returns true on success, false on failure
      */
-    public function render() {
+    public function render($auto_design = true) {
         if (!is_admin()) {
             $post = get_post();
             if ($post && in_array($post->post_type, array('photogallery', 'photoalbum'))) {
                 $design_meta = get_post_meta($post->ID, '_' . $post->post_type . '_design', true);
                 $design_ID = $design_meta['id'];
-                if (key_exists($design_ID, $GLOBALS['kt-' . $post->post_type . '-designs'])) {
+                $got_design = key_exists($design_ID, $GLOBALS['kt-' . $post->post_type . '-designs']);
+                if (!$got_design && $auto_design) {
+                    $design_ID = reset($GLOBALS['kt-' . $post->post_type . '-designs']);
+                    if ($design_ID) {
+                        $got_design = true;
+                    }
+                }
+                if ($got_design) {
                     $render = $GLOBALS['kt-' . $post->post_type . '-designs'][$design_ID]['render'];
                     $options = array();
                     if (key_exists($design_ID, $design_meta['options'])) {
                         $options = $design_meta['options'][$design_ID];
                     }
                     call_user_func($render, $post, $options);
+                    return true;
                 }
             }
         }
+        return false;
     }
 
     protected function get_meta($ID, $key) {
