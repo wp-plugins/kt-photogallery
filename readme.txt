@@ -1,7 +1,7 @@
 === Photogallery ===
 Contributors: kungtiger
 Requires at least: 4.0
-Tested up to: 4.1.1
+Tested up to: 4.2
 Stable tag: 1.2.1
 Tags: photo, image, picture, gallery, album
 License: GPLv2 or later
@@ -149,8 +149,8 @@ Returns the number of albums associated with a gallery
 **Returns** `integer`|`boolean` - Returns an integer on success, or `false` if `$gallery_ID` yields no gallery
 
 - **`$kt_Photogallery->get_albums ( [$gallery_ID] )`**  
-Returns an array of album IDs associated with an gallery.  
-**Argument** `int`|`null $gallery_ID` *Optional* - ID of an album. Defaults to the current ID if used inside the Loop  
+Returns an array of album IDs associated with a gallery.  
+**Argument** `int`|`null $gallery_ID` *Optional* - ID of a gallery. Defaults to the current ID if used inside the Loop  
 **Returns** `array`|`boolean` - Returns an array of IDs on success, `false` if `$gallery_ID` yields no gallery
 
 - **`$kt_Photogallery->get_image_count ( [$album_ID] )`**  
@@ -185,14 +185,16 @@ The design will be available in the Design metabox during editing
 
   - `string label` - The text for the label
   - `string icon` - The image shown next to the label. Can be `dashicons-*`, an URL to an image or a base 64 encoded image
-  - `string title` - Text used inside the HTML title tag, usually containing a description
+  - `string title` - Text used inside the HTML title attribute, usually containing a description
   - `callback render ($post, $options)` - Callback rendering the design on the frontend. The arguments passed are the current post as a WP_Post instance and an associative array of the options straight from the database
   - `callback options ($current_options, $defaults, $post)` - Callback for additional form fields, should echo HTML. The arguments passed are an associative array of the options straight from the database, the default options as second argument and the current post as a WP_Post instance as third.
   - `array  defaults` - Associative array containing default values for options. Its keys are used during saving so you should generate HTML form fields using its keys and provide a callback for filtering.
   - `callback filter ($current_options, $defaults, $post)` - Callback for filtering the options before they are saved. This callback is called every time a post is saved. The arguments passed are the default options merged with the values from the current request, the default options as second argument and the current post as a WP_Post instance as third. The callback must return an associative array otherwise no options are stored.
 
-- **`$kt_Photogallery->render`**  
+- **`$kt_Photogallery->render( [$auto_design] )`**
 Main output method. Depending on the current post type the method prints out a design for a gallery or an album.
+**Argument** `boolean auto_design` *optional* - If set `true` and no design is found, take the first registered one and proceed. Default is `true`
+**Returns** `boolean` - Returns `true` on success, `false` otherwise
 
 == Installation ==
 
