@@ -4,7 +4,7 @@
  * Plugin Name: Photogallery
  * Plugin URI: https://wordpress.org/plugins/kt-photogallery
  * Description: Create photo-galleries with ease.
- * Version: 1.2.1
+ * Version: 1.3
  * Author: Daniel Schneider
  * Author URI: http://profiles.wordpress.org/kungtiger
  * License: GPL2 or later
